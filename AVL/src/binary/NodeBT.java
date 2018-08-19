@@ -2,6 +2,7 @@ package binary;
 
 
 import interfaces.Position;
+import java.util.Iterator;
 import java.util.Vector;
 
 
@@ -55,7 +56,6 @@ public class NodeBT implements Position{
 
     public void setRight(NodeBT right) {
         this.right = right;
-    }
-    
+    }    
     
 }

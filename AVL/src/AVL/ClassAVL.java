@@ -13,19 +13,4 @@ import interfaces.InvalidPositionException;
  */
 public class ClassAVL extends ClassBT{
     
-    @Override
-    public void add(int key, Object o) throws InvalidPositionException {
-        
-    }
-
-    @Override
-    public Object remove(int key) throws InvalidPositionException {
-        
-    }
-
-    @Override
-    public Object search(int key, Object o) {
-        
-    }
-    
 }

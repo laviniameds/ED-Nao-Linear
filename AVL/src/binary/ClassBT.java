@@ -3,6 +3,7 @@ package binary;
 import interfaces.BinaryTree;
 import interfaces.InvalidPositionException;
 import interfaces.Position;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -28,16 +29,30 @@ public class ClassBT implements BinaryTree {
         size++;
     }
 
-    private NodeBT insert(NodeBT aux, NodeBT node) {
+    private void insert(NodeBT aux, NodeBT node) throws InvalidPositionException {
         if (node.getKey() < aux.getKey()) {
-            aux.setLeft(insert(aux.getLeft(), node));
+            if (hasLeft(aux)) {
+                aux = (NodeBT) getLeft(aux);
+                insert(aux, node);
+            } else {
+                aux.setLeft(node);
+                node.setParent(aux);
+                size++;
+            }
         } else if (node.getKey() > aux.getKey()) {
-            aux.setRight(insert(aux.getRight(), node));
+            if (hasRight(aux)) {
+                aux = (NodeBT) getRight(aux);
+                insert(aux, node);
+            } else {
+                aux.setRight(node);
+                node.setParent(aux);
+                size++;
+            }
+        } else {
+            return;
         }
-
-        return aux;
     }
-    
+
     private boolean isLeftChild(NodeBT node) {
         return node.getKey() < node.getParent().getKey();
     }
@@ -63,36 +78,38 @@ public class ClassBT implements BinaryTree {
             }
             //o nó tem 1 filho (esquerdo)
             if (hasLeft(node) && !hasRight(node)) {
-                
-                if (isLeftChild(node)) 
+
+                if (isLeftChild(node)) {
                     node.getParent().setLeft(node.getLeft());
-                else 
+                } else {
                     node.getParent().setRight(node.getLeft());
-                
+                }
+
                 node.getLeft().setParent(node.getParent());
                 size--;
                 return node;
             }
             //o nó tem um filho (direito)
             if (!hasLeft(node) && hasRight(node)) {
-                if (isLeftChild(node)) 
+                if (isLeftChild(node)) {
                     node.getParent().setLeft(node.getRight());
-                else 
+                } else {
                     node.getParent().setRight(node.getRight());
-                
+                }
+
                 node.getRight().setParent(node.getParent());
                 size--;
                 return node;
             }
             //o nó tem dois filhos
             NodeBT aux = node.getRight(); //pega o filho da direita
-            while (aux.getLeft()!= null) { //pega o ultimo filho da esquerda desse nó ou ele mesmo
+            while (aux.getLeft() != null) { //pega o ultimo filho da esquerda desse nó ou ele mesmo
                 aux = aux.getLeft();
             }
             element = aux.getElement();//pega o conteudo do nó a ser removido
             remove(aux, element);//remove esse nó recursivamente
             node.setElement(element);//restaura o conteudo do nó removido 
-            
+
             size--;
             return node;
         }
@@ -102,9 +119,10 @@ public class ClassBT implements BinaryTree {
     @Override
     public NodeBT find(int key) throws InvalidPositionException {
         NodeBT node = new NodeBT(key, null, null);
-        if (!isEmpty()) 
+        if (!isEmpty()) {
             return find(root, node);
-        
+        }
+
         return null;
     }
 
@@ -150,12 +168,12 @@ public class ClassBT implements BinaryTree {
 
     @Override
     public boolean hasLeft(NodeBT no) throws InvalidPositionException {
-        return (no.getLeft() == null);
+        return (no.getLeft() != null);
     }
 
     @Override
     public boolean hasRight(NodeBT no) throws InvalidPositionException {
-        return (no.getRight() == null);
+        return (no.getRight() != null);
     }
 
     @Override
@@ -166,13 +184,16 @@ public class ClassBT implements BinaryTree {
     @Override
     public int height(Position p) {
         NodeBT node = (NodeBT) p;
-        int l = height(node.getLeft());
-        int r = height(node.getRight());
-
-        if (l > r) {
-            return l + 1;
+        if (isExternal(node)) {
+            return 0;
         } else {
-            return r + 1;
+            Iterator itr = children(node);
+            int h = 0;
+            while (itr.hasNext()) {
+                NodeBT noChild = (NodeBT) itr.next();
+                h = Math.max(h, height(noChild));
+            }
+            return 1 + h;
         }
     }
 
@@ -284,6 +305,33 @@ public class ClassBT implements BinaryTree {
         Object aux = node.getElement();
         node.setElement(o);
         return aux;
+    }
+
+    public void mostrar() {
+        ArrayList<StringBuffer> a = new ArrayList<>();
+        int altura = height(root) + 1;
+
+        for (int i = 0; i < altura; i++) 
+            a.add(new StringBuffer());
+        
+        mostrarRecursao(root, 0, a);
+        for (int i = 0; i < altura; i++) 
+            System.out.println(a.get(i));
+        
+    }
+
+    private void mostrarRecursao(NodeBT node, int profundidade, ArrayList<StringBuffer> a) {
+        if (node == null) 
+            return;
+        
+        mostrarRecursao(node.getLeft(), profundidade + 1, a);
+        for (int i = 0; i < height(root) + 1; ++i) {
+            if (i == profundidade) 
+                a.get(i).append(node.getKey());
+            else 
+                a.get(i).append("  ");         
+        }
+        mostrarRecursao(node.getRight(), profundidade + 1, a);
     }
 
 }
