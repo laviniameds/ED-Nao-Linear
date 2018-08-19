@@ -1,27 +1,22 @@
-package AVL;
+package binary;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- *
- * @author lavinia
- */
-public class NodeAVL {
-    
+import interfaces.Position;
+import java.util.Vector;
+
+
+public class NodeBT implements Position{
     private int key;
     private Object element;
-    private NodeAVL parent,left,right;
+    private NodeBT parent,left,right;
    
-    public NodeAVL(int key, Object element, NodeAVL parent) {
+    public NodeBT(int key, Object element, NodeBT parent) {
         this.key = key;
         this.element = element;
         this.parent = parent;      
     }
 
+    @Override
     public Object getElement() {
         return this.element;
     }
@@ -38,27 +33,29 @@ public class NodeAVL {
         this.key = key;
     }
 
-    public NodeAVL getParent() {
+    public NodeBT getParent() {
         return parent;
     }
 
-    public void setParent(NodeAVL parent) {
+    public void setParent(NodeBT parent) {
         this.parent = parent;
     }
 
-    public NodeAVL getLeft() {
+    public NodeBT getLeft() {
         return left;
     }
 
-    public void setLeft(NodeAVL left) {
+    public void setLeft(NodeBT left) {
         this.left = left;
     }
 
-    public NodeAVL getRight() {
+    public NodeBT getRight() {
         return right;
     }
 
-    public void setRight(NodeAVL right) {
+    public void setRight(NodeBT right) {
         this.right = right;
     }
+    
+    
 }

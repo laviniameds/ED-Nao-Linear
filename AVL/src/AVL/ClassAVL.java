@@ -1,5 +1,6 @@
 package AVL;
-
+import binary.ClassBT;
+import interfaces.InvalidPositionException;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -10,15 +11,15 @@ package AVL;
  *
  * @author lavinia
  */
-public class ClassAVL implements InterfaceAVL{
-
+public class ClassAVL extends ClassBT{
+    
     @Override
-    public void add(int key, Object o) {
+    public void add(int key, Object o) throws InvalidPositionException {
         
     }
 
     @Override
-    public Object remove(int key) {
+    public Object remove(int key) throws InvalidPositionException {
         
     }
 
