@@ -15,10 +15,10 @@ public class ClassBT implements BinaryTree {
         root = null;
         size = 0;
     }
-    
-    @Override
-    public void add(int key, Object o) throws InvalidPositionException {
 
+    @Override
+    public void insert(int key, Object o) throws InvalidPositionException {
+        
     }
 
     @Override
@@ -125,8 +125,8 @@ public class ClassBT implements BinaryTree {
             return inOrderNos(root).iterator();
         }
     }
-    
-    private Vector<NodeBT> inOrderNos(Position p){
+
+    private Vector<NodeBT> inOrderNos(Position p) {
         Vector<NodeBT> vector = new Vector();
         NodeBT node = (NodeBT) p;
         Iterator<NodeBT> children = children(node);
@@ -145,33 +145,47 @@ public class ClassBT implements BinaryTree {
 
     @Override
     public Position parent(Position p) {
-        NodeBT no = (NodeBT)p;
+        NodeBT no = (NodeBT) p;
         return no.getParent();
     }
 
     @Override
-    public Iterator children(Position p) {
-
+    public Iterator children(Position p) {      
+        Vector<NodeBT> vector = new Vector<>();
+        NodeBT node = (NodeBT)p;
+        
+        if (node.getLeft()!= null) 
+            vector.add(node.getLeft());       
+        if (node.getRight()!= null) 
+            vector.add(node.getRight());
+        
+        return vector.iterator();
     }
 
     @Override
     public boolean isExternal(Position p) {
-
+        NodeBT node = (NodeBT)p;
+        return
+            node.getLeft() == null && node.getRight() == null;        
     }
 
     @Override
     public boolean isInternal(Position p) {
-
+        return !isExternal(p);
     }
 
     @Override
     public boolean isRoot(Position p) {
-
+        NodeBT node = (NodeBT)p;
+        return node == root;
     }
 
     @Override
     public Object replace(Position p, Object o) {
-
+        NodeBT node = (NodeBT) p;
+        Object aux = node.getElement();
+        node.setElement(o);
+        return aux;
     }
 
 }
