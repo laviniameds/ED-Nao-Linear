@@ -37,38 +37,93 @@ public class ClassBT implements BinaryTree {
 
         return aux;
     }
+    
+    private boolean isLeftChild(NodeBT node) {
+        return node.getKey() < node.getParent().getKey();
+    }
 
     @Override
-    public Object remove(int key) throws InvalidPositionException {
+    public NodeBT remove(int key) throws InvalidPositionException {
+        NodeBT node = find(key);
+        return remove(node, node.getElement());
+    }
 
+    private NodeBT remove(NodeBT node, Object element) throws InvalidPositionException {
+        if (node != null) {
+            //o nó não tem filhos
+            if (isExternal(node)) {
+                if (node.getKey() < node.getParent().getKey()) {
+                    node.getParent().setRight(null);
+                } else {
+                    node.getParent().setLeft(null);
+                }
+
+                size--;
+                return node;
+            }
+            //o nó tem 1 filho (esquerdo)
+            if (hasLeft(node) && !hasRight(node)) {
+                
+                if (isLeftChild(node)) 
+                    node.getParent().setLeft(node.getLeft());
+                else 
+                    node.getParent().setRight(node.getLeft());
+                
+                node.getLeft().setParent(node.getParent());
+                size--;
+                return node;
+            }
+            //o nó tem um filho (direito)
+            if (!hasLeft(node) && hasRight(node)) {
+                if (isLeftChild(node)) 
+                    node.getParent().setLeft(node.getRight());
+                else 
+                    node.getParent().setRight(node.getRight());
+                
+                node.getRight().setParent(node.getParent());
+                size--;
+                return node;
+            }
+            //o nó tem dois filhos
+            NodeBT aux = node.getRight(); //pega o filho da direita
+            while (aux.getLeft()!= null) { //pega o ultimo filho da esquerda desse nó ou ele mesmo
+                aux = aux.getLeft();
+            }
+            element = aux.getElement();//pega o conteudo do nó a ser removido
+            remove(aux, element);//remove esse nó recursivamente
+            node.setElement(element);//restaura o conteudo do nó removido 
+            
+            size--;
+            return node;
+        }
+        return null;
     }
 
     @Override
     public NodeBT find(int key) throws InvalidPositionException {
         NodeBT node = new NodeBT(key, null, null);
-        if (!isEmpty()) {
+        if (!isEmpty()) 
             return find(root, node);
-        }
-
+        
         return null;
     }
 
     private NodeBT find(NodeBT aux, NodeBT node) throws InvalidPositionException {
         if (node.getKey() < aux.getKey()) {
             if (hasLeft(aux)) {
-                aux = (NodeBT)getLeft(aux);
+                aux = (NodeBT) getLeft(aux);
                 return find(aux, node);
-            } 
-            else 
-                return null;           
+            } else {
+                return null;
+            }
         }
         if (node.getKey() > aux.getKey()) {
             if (hasRight(aux)) {
                 aux = (NodeBT) getRight(aux);
                 return find(aux, node);
-            } 
-            else 
-                return null;         
+            } else {
+                return null;
+            }
         }
         return aux;
     }
