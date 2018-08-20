@@ -16,90 +16,104 @@ public class ClassBT implements BinaryTree {
         root = null;
         size = 0;
     }
-    
+
     /*
     
     Métodos da AVL 
     
-    */
+     */
     
     //balancear
-    
-    private void balance(NodeBT node){
-        if(node.getFB() >= 0){
-            
-        }
-        else{
-            
+    private void balance(NodeBT node) {
+        if (node.getFB() > 0) {
+            if (node.getLeft().getFB() >= 0) {
+                RSD(node);
+            } else {
+                RSE(node.getLeft());
+                RSD(node);
+            }
+        } else {
+            if (node.getRight().getFB() <= 0)
+                RSE(node);
+            else {
+                RSD(node.getRight());
+                RSE(node);
+            }
         }
     }
-    
+
     //rotacao simples a esquerda   
-    private void RSE(NodeBT node){
+    private void RSE(NodeBT node) {
         NodeBT backup = node;
         node = node.getRight();
-        
+
         node.setLeft(backup);
         node.setParent(backup.getParent());
         backup.setParent(node);
-        
+
         int new_FB_Backup = backup.getFB() + 1 - Integer.min(node.getFB(), 0);
         int new_FB_Node = node.getFB() + 1 + Integer.max(new_FB_Backup, 0);
-        
+
         backup.setFB(new_FB_Backup);
         node.setFB(new_FB_Node);
     }
-    
+
     //rotacao simples a direita
-    private void RSD(NodeBT node){
+    private void RSD(NodeBT node) {
         NodeBT backup = node;
         node = node.getLeft();
-        
+
         node.setRight(backup);
         node.setParent(backup.getParent());
         backup.setParent(node);
-        
+
         int new_FB_Backup = backup.getFB() - 1 - Integer.max(node.getFB(), 0);
         int new_FB_Node = node.getFB() - 1 + Integer.min(new_FB_Backup, 0);
-        
+
         backup.setFB(new_FB_Backup);
         node.setFB(new_FB_Node);
     }
-    
+
     //calcular Fator de Balanceamento (FB)
-    
-    private int getCurrentFB(NodeBT node){
+    private int getCurrentFB(NodeBT node) {
         return height(node.getLeft()) - height(node.getRight());
     }
-    
+
     //checa se precisa balancear
-        
-    private boolean isUnbalanced(NodeBT node){
+    private boolean isUnbalanced(NodeBT node) {
         int currentFB = getCurrentFB(node);
-        if (currentFB >= Math.abs(2)){
+        if (currentFB >= Math.abs(2)) {
             node.setFB(currentFB);
             return true;
         }
         return false;
     }
-    
+
+    //sobe pelo nó inserido mudando os FBs
+    private void changeFBInsert(NodeBT node, int value) {
+        while (node.getParent().getFB() != 0) {
+            node.changeFB(value);
+            
+            if(isUnbalanced(node)) //se está desbalanceado, balanceia
+                balance(node);
+                
+            changeFBInsert(node.getParent(), value);
+        }
+    }
+
     /*
     
     Métodos da arvore de pesquisa
     
-    */
-    
+     */
     @Override
     public void insert(int key, Object o) throws InvalidPositionException {
         NodeBT node = new NodeBT(key, o, null);
-        if (isEmpty())
+        if (isEmpty()) 
             root = node;
         else 
             insert(root, node);
-               
-        if(isUnbalanced(node.getParent()))
-            balance(node.getParent());
-        
+     
         size++;
     }
 
@@ -111,7 +125,7 @@ public class ClassBT implements BinaryTree {
             } else {
                 aux.setLeft(node);
                 node.setParent(aux);
-                node.getParent().changeFB(1);
+                changeFBInsert(node, 1);
                 size++;
             }
         } else if (node.getKey() > aux.getKey()) {
@@ -121,7 +135,7 @@ public class ClassBT implements BinaryTree {
             } else {
                 aux.setRight(node);
                 node.setParent(aux);
-                node.getParent().changeFB(-1);
+                changeFBInsert(node, -1);
                 size++;
             }
         } else {
@@ -387,25 +401,29 @@ public class ClassBT implements BinaryTree {
         ArrayList<StringBuffer> a = new ArrayList<>();
         int altura = height(root) + 1;
 
-        for (int i = 0; i < altura; i++) 
+        for (int i = 0; i < altura; i++) {
             a.add(new StringBuffer());
-        
+        }
+
         mostrarRecursao(root, 0, a);
-        for (int i = 0; i < altura; i++) 
+        for (int i = 0; i < altura; i++) {
             System.out.println(a.get(i));
-        
+        }
+
     }
 
     private void mostrarRecursao(NodeBT node, int profundidade, ArrayList<StringBuffer> a) {
-        if (node == null) 
+        if (node == null) {
             return;
-        
+        }
+
         mostrarRecursao(node.getLeft(), profundidade + 1, a);
         for (int i = 0; i < height(root) + 1; ++i) {
-            if (i == profundidade) 
+            if (i == profundidade) {
                 a.get(i).append(node.getKey());
-            else 
-                a.get(i).append("  ");         
+            } else {
+                a.get(i).append("  ");
+            }
         }
         mostrarRecursao(node.getRight(), profundidade + 1, a);
     }
