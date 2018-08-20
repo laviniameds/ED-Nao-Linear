@@ -1,6 +1,6 @@
 package interfaces;
 
-import binary.NodeBT;
+import AVL.NodeBT;
 
 public interface BinaryTree extends Tree {
     
