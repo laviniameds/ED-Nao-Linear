@@ -25,17 +25,17 @@ public class ClassBT implements BinaryTree {
     
     //balancear
     private void balance(NodeBT node) {
-        if (node.getFB() > 0) {
-            if (node.getLeft().getFB() >= 0) {
+        if (node.getFB() > 0) {//se é 2
+            if (node.getLeft().getFB() >= 0) //se a subarvore da esquerda é MAIOR ou igual a 0
                 RSD(node);
-            } else {
+            else { //se a subarvore da esquerda é MENOR que 0
                 RSE(node.getLeft());
                 RSD(node);
             }
-        } else {
-            if (node.getRight().getFB() <= 0)
+        } else { //se é -2
+            if (node.getRight().getFB() <= 0) //se a subarvore da direita é MENOR ou igual a 0
                 RSE(node);
-            else {
+            else { //se a subarvore da direita é MAIOR que 0
                 RSD(node.getRight());
                 RSE(node);
             }
@@ -75,12 +75,14 @@ public class ClassBT implements BinaryTree {
     }
 
     //calcular Fator de Balanceamento (FB)
-    private int getCurrentFB(NodeBT node) {
-        return height(node.getLeft()) - height(node.getRight());
+    private int getCurrentFB(NodeBT node) throws InvalidPositionException {
+        if(isInternal(node))
+            return height(node.getLeft()) - height(node.getRight());
+        return node.getFB();
     }
 
     //checa se precisa balancear
-    private boolean isUnbalanced(NodeBT node) {
+    private boolean isUnbalanced(NodeBT node) throws InvalidPositionException {
         int currentFB = getCurrentFB(node);
         if (currentFB >= Math.abs(2)) {
             node.setFB(currentFB);
@@ -90,8 +92,8 @@ public class ClassBT implements BinaryTree {
     }
 
     //sobe pelo nó inserido mudando os FBs
-    private void changeFBInsert(NodeBT node, int value) {
-        while (node.getParent().getFB() != 0) {
+    private void changeFBInsert(NodeBT node, int value) throws InvalidPositionException {
+        while (node.getParent().getFB() == 0 || node.getParent() != null) {
             node.changeFB(value);
             
             if(isUnbalanced(node)) //se está desbalanceado, balanceia

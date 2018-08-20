@@ -20,13 +20,17 @@ public class Main {
         binaria.insert(10, 0);
         binaria.insert(20, 0);
         binaria.insert(30, 0);
-        binaria.insert(40, 0);
+        binaria.mostrar();
+        
+       /* binaria.insert(40, 0);
         binaria.insert(50, 0);
         binaria.insert(25, 0);
+        binaria.mostrar();
+        
         binaria.insert(60, 0);
         binaria.insert(70, 0);
         binaria.insert(80, 0);
         binaria.insert(90, 0);
-        binaria.mostrar();
+        binaria.mostrar();*/
     }
 }
