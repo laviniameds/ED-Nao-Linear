@@ -17,20 +17,34 @@ public class Main {
     public static void main(String[] args) throws InvalidPositionException{
         ClassBT binaria = new ClassBT();
         
-        binaria.insert(10, 0);
-        binaria.insert(20, 0);
-        binaria.insert(30, 0);
+        binaria.insert(10, 10);
         binaria.mostrar();
         
-       /* binaria.insert(40, 0);
-        binaria.insert(50, 0);
-        binaria.insert(25, 0);
+        binaria.insert(20, 20);
+        binaria.mostrar();    
+        
+        binaria.insert(30, 30);
         binaria.mostrar();
         
-        binaria.insert(60, 0);
-        binaria.insert(70, 0);
-        binaria.insert(80, 0);
-        binaria.insert(90, 0);
-        binaria.mostrar();*/
+        binaria.insert(40, 40);
+        binaria.mostrar();
+        
+        binaria.insert(50, 50);
+        binaria.mostrar();
+        
+        binaria.insert(25, 25);
+        binaria.mostrar();
+        
+        binaria.insert(60, 60);
+        binaria.mostrar();
+        
+        binaria.insert(70, 70);
+        binaria.mostrar();
+        
+        binaria.insert(80, 80);
+        binaria.mostrar();
+        
+        binaria.insert(90, 90);
+        binaria.mostrar();
     }
 }
