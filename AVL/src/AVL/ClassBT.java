@@ -27,56 +27,88 @@ public class ClassBT implements BinaryTree {
     //balancear
     private void balance(NodeBT node) {
         if (node.getFB() > 0) {//se é 2
-            if (node.getLeft().getFB() >= 0) //se a subarvore da esquerda é MAIOR ou igual a 0
-            {
+            if (node.getLeft().getFB() >= 0) //se a subarvore da esquerda é MAIOR ou igual a 0           
                 RSD(node);
-            } else { //se a subarvore da esquerda é MENOR que 0
+            else{ //se a subarvore da esquerda é MENOR que 0
                 RSE(node.getLeft());
-                RSD(node);
+                RSD(node); 
             }
-        } else //se é -2
-        if (node.getRight().getFB() <= 0) //se a subarvore da direita é MENOR ou igual a 0
-        {
-            RSE(node);
-        } else { //se a subarvore da direita é MAIOR que 0
-            RSD(node.getRight());
-            RSE(node);
+        } else{ //se é -2
+            if (node.getRight().getFB() <= 0) //se a subarvore da direita é MENOR ou igual a 0         
+                RSE(node);
+            else{ //se a subarvore da direita é MAIOR que 0
+                RSD(node.getRight());
+                RSE(node); 
+            }
         }
     }
 
     //rotacao simples a esquerda   
-    private void RSE(NodeBT node) {        
-        NodeBT backupR = node.getRight();
-        NodeBT backupL = backupR.getLeft();
+    private void RSE(NodeBT node) {                      
+        NodeBT backupRightSubTree = node.getRight();
         
-        if(isRoot(node))
-            root = backupR;
+        if(backupRightSubTree.getLeft() != null)
+            node.setRight(backupRightSubTree.getLeft()); 
+        else
+            node.setRight(null);
         
-        backupR.setLeft(node);
-        node.setParent(backupR);
+        backupRightSubTree.setLeft(node);
         
-        node.setRight(backupL);
-        if(backupL != null) backupL.setParent(node);
+        if(node.getParent() != null){
+            backupRightSubTree.setParent(node.getParent());
+            
+            if(isLeftChild(node))
+                node.getParent().setLeft(backupRightSubTree);
+            else
+                node.getParent().setRight(backupRightSubTree);
+        }
         
-        node.setFB(node.getFB() +1 - min(backupR.getFB(), 0));
-        backupR.setFB(backupR.getFB()+1 - max(node.getFB(), 0));
+        node.setParent(backupRightSubTree);
+        
+        if(isRoot(node)){
+            root = backupRightSubTree;
+            root.setParent(null);
+        }
+        
+        int new_FB_B = node.getFB() + 1 - min(backupRightSubTree.getFB(), 0);
+        int new_FB_A = backupRightSubTree.getFB() + 1 + max(new_FB_B, 0);
+        
+        backupRightSubTree.setFB(new_FB_A);
+        node.setFB(new_FB_B);
     }
 
     //rotacao simples a direita
-    private void RSD(NodeBT node) {        
-        NodeBT nLeft = node.getLeft();
-        NodeBT leftRight = nLeft.getRight();
-
-        if(node == root) 
-            root = nLeft;
-        nLeft.setRight(node);
-        node.setParent(nLeft);
+    private void RSD(NodeBT node) {  
+        NodeBT backupLeftSubTree = node.getLeft();
         
-        node.setLeft(leftRight);
-         if(leftRight != null) leftRight.setParent(node);
+        if(backupLeftSubTree.getRight()!= null)
+            node.setLeft(backupLeftSubTree.getRight()); 
+        else
+            node.setLeft(null);
         
-        node.setFB(node.getFB()-1 - max(nLeft.getFB(), 0));
-        nLeft.setFB(nLeft.getFB()-1 - min(node.getFB(), 0));       
+        backupLeftSubTree.setRight(node);
+        
+        if(node.getParent() != null){
+            backupLeftSubTree.setParent(node.getParent());
+            
+            if(isLeftChild(node))            
+                node.getParent().setLeft(backupLeftSubTree);
+            else
+                node.getParent().setRight(backupLeftSubTree);
+        }
+        
+        node.setParent(backupLeftSubTree);
+        
+        if(isRoot(node)){
+            root = backupLeftSubTree;
+            root.setParent(null);
+        }
+        
+        int new_FB_B = node.getFB() - 1 - max(backupLeftSubTree.getFB(), 0);
+        int new_FB_A = backupLeftSubTree.getFB() - 1 + min(new_FB_B, 0);
+        
+        backupLeftSubTree.setFB(new_FB_A);
+        node.setFB(new_FB_B);
     }
 
     //calcular Fator de Balanceamento (FB)
@@ -92,6 +124,11 @@ public class ClassBT implements BinaryTree {
             return true;
         }
         return false;
+    }
+    
+    //sobe pelo nó removido mudando os FBs
+    private void changeFBRemove(NodeBT node){
+        
     }
 
     //sobe pelo nó inserido mudando os FBs
@@ -164,7 +201,9 @@ public class ClassBT implements BinaryTree {
     @Override
     public NodeBT remove(int key) throws InvalidPositionException {
         NodeBT node = find(key);
-        return remove(node, node.getElement());
+        NodeBT removed = remove(node, node.getElement());
+        changeFBInsert(node);
+        return removed;
     }
 
     private NodeBT remove(NodeBT node, Object element) throws InvalidPositionException {
