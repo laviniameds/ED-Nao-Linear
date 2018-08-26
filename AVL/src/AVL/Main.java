@@ -18,33 +18,62 @@ public class Main {
         ClassBT binaria = new ClassBT();
         
         binaria.insert(10, 10);
-        binaria.mostrar();
+//        binaria.mostrar();
         
         binaria.insert(20, 20);
-        binaria.mostrar();    
+//        binaria.mostrar();  
         
         binaria.insert(30, 30);
-        binaria.mostrar();
+//        binaria.mostrar();
         
         binaria.insert(40, 40);
-        binaria.mostrar();
+//        binaria.mostrar();
         
         binaria.insert(50, 50);
-        binaria.mostrar();
+//        binaria.mostrar();
         
         binaria.insert(25, 25);
-        binaria.mostrar();
+//        binaria.mostrar();
         
         binaria.insert(60, 60);
-        binaria.mostrar();
+//        binaria.mostrar();
         
         binaria.insert(70, 70);
-        binaria.mostrar();
+//        binaria.mostrar();
         
         binaria.insert(80, 80);
+//        binaria.mostrar();
+        
+        binaria.insert(35, 35);
         binaria.mostrar();
         
-        binaria.insert(90, 90);
+        //teste remoção
+        
+        binaria.remove(40);
+        binaria.mostrar();
+        
+        binaria.remove(25);
+        binaria.mostrar();
+        
+        binaria.remove(50);
+        binaria.mostrar();        
+        
+        binaria.remove(10);
+        binaria.mostrar();        
+        
+        binaria.remove(35);
+        binaria.mostrar();
+        
+        binaria.remove(30);
+        binaria.mostrar();
+        
+        binaria.remove(20);
+        binaria.mostrar();
+        
+        binaria.remove(70);
+        binaria.mostrar();
+        
+        binaria.remove(60);
         binaria.mostrar();
     }
 }

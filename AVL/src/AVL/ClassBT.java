@@ -47,8 +47,10 @@ public class ClassBT implements BinaryTree {
     private void RSE(NodeBT node) {                      
         NodeBT backupRightSubTree = node.getRight();
         
-        if(backupRightSubTree.getLeft() != null)
-            node.setRight(backupRightSubTree.getLeft()); 
+        if(backupRightSubTree.getLeft() != null){
+            node.setRight(backupRightSubTree.getLeft());
+            backupRightSubTree.getLeft().setParent(node);
+        }
         else
             node.setRight(null);
         
@@ -81,8 +83,10 @@ public class ClassBT implements BinaryTree {
     private void RSD(NodeBT node) {  
         NodeBT backupLeftSubTree = node.getLeft();
         
-        if(backupLeftSubTree.getRight()!= null)
-            node.setLeft(backupLeftSubTree.getRight()); 
+        if(backupLeftSubTree.getRight()!= null){
+            node.setLeft(backupLeftSubTree.getRight());
+            backupLeftSubTree.getRight().setParent(node);
+        }
         else
             node.setLeft(null);
         
@@ -118,17 +122,28 @@ public class ClassBT implements BinaryTree {
 
     //checa se precisa balancear
     private boolean isUnbalanced(NodeBT node) throws InvalidPositionException {
-        int currentFB = node.getFB();
-        if (currentFB > 1 || currentFB < -1) {
-            //node.setFB(currentFB);
-            return true;
-        }
+        if (node.getFB() > 1 || node.getFB() < -1) 
+            return true;       
         return false;
     }
     
     //sobe pelo nó removido mudando os FBs
-    private void changeFBRemove(NodeBT node){
+    private void changeFBRemove(NodeBT node) throws InvalidPositionException{
+        if(node.getParent() == null)
+            return;
         
+        if (isLeftChild(node)) 
+            node.getParent().changeFB(-1);
+        else 
+            node.getParent().changeFB(+1);        
+        
+        if (isUnbalanced(node.getParent())){ //se está desbalanceado, balanceia                
+            balance(node.getParent()); 
+            return;
+        }
+        
+        if(node.getParent().getFB() != 0) //chama recursivamente passando o pai, para ir subindo até o root ou a condição de parada
+            changeFBRemove(node.getParent());
     }
 
     //sobe pelo nó inserido mudando os FBs
@@ -201,32 +216,35 @@ public class ClassBT implements BinaryTree {
     @Override
     public NodeBT remove(int key) throws InvalidPositionException {
         NodeBT node = find(key);
-        NodeBT removed = remove(node, node.getElement());
-        changeFBInsert(node);
-        return removed;
+        NodeBT r = remove(node);
+        
+        if(r.getParent() == null)
+            root = r;
+        
+        changeFBRemove(node);
+        return r;
     }
 
-    private NodeBT remove(NodeBT node, Object element) throws InvalidPositionException {
+    private NodeBT remove(NodeBT node) throws InvalidPositionException {
         if (node != null) {
             //o nó não tem filhos
             if (isExternal(node)) {
-                if (node.getKey() < node.getParent().getKey()) {
-                    node.getParent().setRight(null);
-                } else {
+                if (isLeftChild(node)) 
                     node.getParent().setLeft(null);
-                }
-
+                else 
+                    node.getParent().setRight(null);
+                
                 size--;
                 return node;
             }
             //o nó tem 1 filho (esquerdo)
             if (hasLeft(node) && !hasRight(node)) {
 
-                if (isLeftChild(node)) {
+                if (isLeftChild(node)) 
                     node.getParent().setLeft(node.getLeft());
-                } else {
+                else 
                     node.getParent().setRight(node.getLeft());
-                }
+                
 
                 node.getLeft().setParent(node.getParent());
                 size--;
@@ -234,24 +252,29 @@ public class ClassBT implements BinaryTree {
             }
             //o nó tem um filho (direito)
             if (!hasLeft(node) && hasRight(node)) {
-                if (isLeftChild(node)) {
+                if (isLeftChild(node))
                     node.getParent().setLeft(node.getRight());
-                } else {
+                else 
                     node.getParent().setRight(node.getRight());
-                }
+                
 
                 node.getRight().setParent(node.getParent());
                 size--;
                 return node;
             }
+            
             //o nó tem dois filhos
             NodeBT aux = node.getRight(); //pega o filho da direita
-            while (aux.getLeft() != null) { //pega o ultimo filho da esquerda desse nó ou ele mesmo
+            while (aux.getLeft() != null){
+                //pega o ultimo filho da esquerda desse nó ou ele mesmo
                 aux = aux.getLeft();
             }
-            element = aux.getElement();//pega o conteudo do nó a ser removido
-            remove(aux, element);//remove esse nó recursivamente
+            
+            Object element = aux.getElement();//pega o conteudo do nó a ser removido
+            int key = aux.getKey();
+            remove(aux);//remove esse nó recursivamente
             node.setElement(element);//restaura o conteudo do nó removido 
+            node.setKey(key);//restaura a key do nó
 
             size--;
             return node;
@@ -261,32 +284,23 @@ public class ClassBT implements BinaryTree {
 
     @Override
     public NodeBT find(int key) throws InvalidPositionException {
-        NodeBT node = new NodeBT(key, null, null);
-        if (!isEmpty()) {
-            return find(root, node);
-        }
-
+        if (!isEmpty()) 
+            return find(key, root);
+        
         return null;
     }
 
-    private NodeBT find(NodeBT aux, NodeBT node) throws InvalidPositionException {
-        if (node.getKey() < aux.getKey()) {
-            if (hasLeft(aux)) {
-                aux = (NodeBT) getLeft(aux);
-                return find(aux, node);
-            } else {
-                return null;
-            }
-        }
-        if (node.getKey() > aux.getKey()) {
-            if (hasRight(aux)) {
-                aux = (NodeBT) getRight(aux);
-                return find(aux, node);
-            } else {
-                return null;
-            }
-        }
-        return aux;
+    private NodeBT find(int key, NodeBT node) throws InvalidPositionException { 
+        if(node == null)
+            return null;
+        
+        if(key == node.getKey())
+            return node;
+        
+        if (key < node.getKey()) 
+            return find(key, node.getLeft());                  
+        else
+            return find(key, node.getRight());               
     }
 
     @Override
