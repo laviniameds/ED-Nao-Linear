@@ -5,7 +5,6 @@
  */
 package RN;
 
-import AVL.NodeBT;
 import interfaces.Position;
 
 /**
@@ -15,10 +14,10 @@ import interfaces.Position;
 public class NodeRN implements Position{
     private int key;
     private Object element;
-    private NodeBT parent,left,right;
+    private NodeRN parent,left,right;
     private int color; // 0 = negro, 1 = rubro
    
-    public NodeRN(int key, Object element, NodeBT parent) {
+    public NodeRN(int key, Object element, NodeRN parent) {
         this.key = key;
         this.element = element;
         this.parent = parent;
@@ -42,27 +41,27 @@ public class NodeRN implements Position{
         this.key = key;
     }
 
-    public NodeBT getParent() {
+    public NodeRN getParent() {
         return parent;
     }
 
-    public void setParent(NodeBT parent) {
+    public void setParent(NodeRN parent) {
         this.parent = parent;
     }
 
-    public NodeBT getLeft() {
+    public NodeRN getLeft() {
         return left;
     }
 
-    public void setLeft(NodeBT left) {
+    public void setLeft(NodeRN left) {
         this.left = left;
     }
 
-    public NodeBT getRight() {
+    public NodeRN getRight() {
         return right;
     }
 
-    public void setRight(NodeBT right) {
+    public void setRight(NodeRN right) {
         this.right = right;
     }    
 

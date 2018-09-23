@@ -304,17 +304,20 @@ public class ClassBT implements BinaryTree {
     }
 
     @Override
-    public NodeBT getLeft(NodeBT no) throws InvalidPositionException {
+    public NodeBT getLeft(Position p) throws InvalidPositionException {
+        NodeBT no = (NodeBT) p;
         return no.getLeft();
     }
 
     @Override
-    public NodeBT getRight(NodeBT no) throws InvalidPositionException {
+    public NodeBT getRight(Position p) throws InvalidPositionException {
+        NodeBT no = (NodeBT) p;
         return no.getRight();
     }
 
     @Override
-    public NodeBT getSibling(NodeBT no) throws InvalidPositionException {
+    public NodeBT getSibling(Position p) throws InvalidPositionException {
+        NodeBT no = (NodeBT) p;
         NodeBT father = no.getParent();
         if (father.getLeft().getElement().equals(no.getElement())) {
             return father.getRight();
@@ -324,12 +327,14 @@ public class ClassBT implements BinaryTree {
     }
 
     @Override
-    public boolean hasLeft(NodeBT no) throws InvalidPositionException {
+    public boolean hasLeft(Position p) throws InvalidPositionException {
+        NodeBT no = (NodeBT) p;
         return (no.getLeft() != null);
     }
 
     @Override
-    public boolean hasRight(NodeBT no) throws InvalidPositionException {
+    public boolean hasRight(Position p) throws InvalidPositionException {
+        NodeBT no = (NodeBT) p;
         return (no.getRight() != null);
     }
 

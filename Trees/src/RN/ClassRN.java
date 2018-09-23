@@ -5,10 +5,11 @@
  */
 package RN;
 
-import AVL.NodeBT;
 import interfaces.BinaryTree;
 import interfaces.InvalidPositionException;
 import interfaces.Position;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Vector;
@@ -19,7 +20,7 @@ import java.util.Vector;
  */
 public class ClassRN implements BinaryTree{
     
-    private NodeBT root;
+    private NodeRN root;
     private int size;
 
     public ClassRN() {
@@ -34,6 +35,73 @@ public class ClassRN implements BinaryTree{
     
     */
     
+        //rotacao simples a esquerda   
+    private void RSE(NodeRN node) {                      
+        NodeRN backupRightSubTree = node.getRight();
+        
+        if(backupRightSubTree.getLeft() != null){
+            node.setRight(backupRightSubTree.getLeft());
+            backupRightSubTree.getLeft().setParent(node);
+        }
+        else
+            node.setRight(null);
+        
+        backupRightSubTree.setLeft(node);
+        
+        if(node.getParent() != null){
+            backupRightSubTree.setParent(node.getParent());
+            
+            if(isLeftChild(node))
+                node.getParent().setLeft(backupRightSubTree);
+            else
+                node.getParent().setRight(backupRightSubTree);
+        }
+        
+        node.setParent(backupRightSubTree);
+        
+        if(isRoot(node)){
+            root = backupRightSubTree;
+            root.setParent(null);
+        }
+        
+        
+    }
+
+    //rotacao simples a direita
+    private void RSD(NodeRN node) {  
+        NodeRN backupLeftSubTree = node.getLeft();
+        
+        if(backupLeftSubTree.getRight()!= null){
+            node.setLeft(backupLeftSubTree.getRight());
+            backupLeftSubTree.getRight().setParent(node);
+        }
+        else
+            node.setLeft(null);
+        
+        backupLeftSubTree.setRight(node);
+        
+        if(node.getParent() != null){
+            backupLeftSubTree.setParent(node.getParent());
+            
+            if(isLeftChild(node))            
+                node.getParent().setLeft(backupLeftSubTree);
+            else
+                node.getParent().setRight(backupLeftSubTree);
+        }
+        
+        node.setParent(backupLeftSubTree);
+        
+        if(isRoot(node)){
+            root = backupLeftSubTree;
+            root.setParent(null);
+        }
+        
+        
+    }
+    
+    //mudar coloração
+    private void changeColor(NodeRN node){
+    }
     
     
     
@@ -42,19 +110,20 @@ public class ClassRN implements BinaryTree{
     Métodos da arvore de pesquisa
     
      */
+
     @Override
     public void insert(int key, Object o) throws InvalidPositionException {
-        NodeBT node = new NodeBT(key, o, null);
+        NodeRN node = new NodeRN(key, o, null);
         if (isEmpty()) 
             root = node;
         else 
             insert(root, node);
     }
 
-    private void insert(NodeBT aux, NodeBT node) throws InvalidPositionException {
+    private void insert(NodeRN aux, NodeRN node) throws InvalidPositionException {
         if (node.getKey() < aux.getKey()) {
             if (hasLeft(aux)) {
-                aux = (NodeBT) getLeft(aux);
+                aux = (NodeRN) getLeft(aux);
                 insert(aux, node);
             } else {
                 aux.setLeft(node);
@@ -64,7 +133,7 @@ public class ClassRN implements BinaryTree{
             }
         } else if (node.getKey() > aux.getKey()) {
             if (hasRight(aux)) {
-                aux = (NodeBT) getRight(aux);
+                aux = (NodeRN) getRight(aux);
                 insert(aux, node);
             } else {
                 aux.setRight(node);
@@ -77,14 +146,14 @@ public class ClassRN implements BinaryTree{
         }
     }
 
-    private boolean isLeftChild(NodeBT node) {
+    private boolean isLeftChild(NodeRN node) {
         return node.getKey() < node.getParent().getKey();
     }
 
     @Override
-    public NodeBT remove(int key) throws InvalidPositionException {
-        NodeBT node = find(key);
-        NodeBT r = remove(node);
+    public NodeRN remove(int key) throws InvalidPositionException {
+        NodeRN node = find(key);
+        NodeRN r = remove(node);
         
         if(r.getParent() == null)
             root = r;
@@ -93,7 +162,7 @@ public class ClassRN implements BinaryTree{
         return r;
     }
 
-    private NodeBT remove(NodeBT node) throws InvalidPositionException {
+    private NodeRN remove(NodeRN node) throws InvalidPositionException {
         if (node != null) {
             //o nó não tem filhos
             if (isExternal(node)) {
@@ -132,7 +201,7 @@ public class ClassRN implements BinaryTree{
             }
             
             //o nó tem dois filhos
-            NodeBT aux = node.getRight(); //pega o filho da direita
+            NodeRN aux = node.getRight(); //pega o filho da direita
             while (aux.getLeft() != null){
                 //pega o ultimo filho da esquerda desse nó ou ele mesmo
                 aux = aux.getLeft();
@@ -151,14 +220,14 @@ public class ClassRN implements BinaryTree{
     }
 
     @Override
-    public NodeBT find(int key) throws InvalidPositionException {
+    public NodeRN find(int key) throws InvalidPositionException {
         if (!isEmpty()) 
             return find(key, root);
         
         return null;
     }
 
-    private NodeBT find(int key, NodeBT node) throws InvalidPositionException { 
+    private NodeRN find(int key, NodeRN node) throws InvalidPositionException { 
         if(node == null)
             return null;
         
@@ -172,18 +241,21 @@ public class ClassRN implements BinaryTree{
     }
 
     @Override
-    public NodeBT getLeft(NodeBT no) throws InvalidPositionException {
+    public NodeRN getLeft(Position p) throws InvalidPositionException {
+        NodeRN no = (NodeRN) p;
         return no.getLeft();
     }
 
     @Override
-    public NodeBT getRight(NodeBT no) throws InvalidPositionException {
+    public NodeRN getRight(Position p) throws InvalidPositionException {
+        NodeRN no = (NodeRN) p;
         return no.getRight();
     }
 
     @Override
-    public NodeBT getSibling(NodeBT no) throws InvalidPositionException {
-        NodeBT father = no.getParent();
+    public NodeRN getSibling(Position p) throws InvalidPositionException {
+        NodeRN no = (NodeRN) p;
+        NodeRN father = no.getParent();
         if (father.getLeft().getElement().equals(no.getElement())) {
             return father.getRight();
         } else {
@@ -192,12 +264,14 @@ public class ClassRN implements BinaryTree{
     }
 
     @Override
-    public boolean hasLeft(NodeBT no) throws InvalidPositionException {
+    public boolean hasLeft(Position p) throws InvalidPositionException {
+        NodeRN no = (NodeRN) p;
         return (no.getLeft() != null);
     }
 
     @Override
-    public boolean hasRight(NodeBT no) throws InvalidPositionException {
+    public boolean hasRight(Position p) throws InvalidPositionException {
+        NodeRN no = (NodeRN) p;
         return (no.getRight() != null);
     }
 
@@ -208,14 +282,14 @@ public class ClassRN implements BinaryTree{
 
     @Override
     public int height(Position p) {
-        NodeBT node = (NodeBT) p;
+        NodeRN node = (NodeRN) p;
         if (isExternal(node)) {
             return 0;
         } else {
             Iterator itr = children(node);
             int h = 0;
             while (itr.hasNext()) {
-                NodeBT noChild = (NodeBT) itr.next();
+                NodeRN noChild = (NodeRN) itr.next();
                 h = Math.max(h, height(noChild));
             }
             return 1 + h;
@@ -225,7 +299,7 @@ public class ClassRN implements BinaryTree{
     @Override
     public int depth(Position p) {
 
-        NodeBT node = (NodeBT) p;
+        NodeRN node = (NodeRN) p;
 
         if (isRoot(node)) {
             return 0;
@@ -250,10 +324,10 @@ public class ClassRN implements BinaryTree{
 
     private Vector<Object> inOrderElements(Position p) {
         Vector<Object> vector = new Vector();
-        NodeBT node = (NodeBT) p;
-        Iterator<NodeBT> children = children(node);
+        NodeRN node = (NodeRN) p;
+        Iterator<NodeRN> children = children(node);
         while (children.hasNext()) {
-            NodeBT n = (NodeBT) children.next();
+            NodeRN n = (NodeRN) children.next();
             vector.addAll(inOrderElements(n));
         }
         vector.add(node.getElement());
@@ -269,12 +343,12 @@ public class ClassRN implements BinaryTree{
         }
     }
 
-    private Vector<NodeBT> inOrderNos(Position p) {
-        Vector<NodeBT> vector = new Vector();
-        NodeBT node = (NodeBT) p;
-        Iterator<NodeBT> children = children(node);
+    private Vector<NodeRN> inOrderNos(Position p) {
+        Vector<NodeRN> vector = new Vector();
+        NodeRN node = (NodeRN) p;
+        Iterator<NodeRN> children = children(node);
         while (children.hasNext()) {
-            NodeBT n = (NodeBT) children.next();
+            NodeRN n = (NodeRN) children.next();
             vector.addAll(inOrderNos(n));
         }
         vector.add(node);
@@ -288,14 +362,14 @@ public class ClassRN implements BinaryTree{
 
     @Override
     public Position parent(Position p) {
-        NodeBT no = (NodeBT) p;
+        NodeRN no = (NodeRN) p;
         return no.getParent();
     }
 
     @Override
     public Iterator children(Position p) {
-        Vector<NodeBT> vector = new Vector<>();
-        NodeBT node = (NodeBT) p;
+        Vector<NodeRN> vector = new Vector<>();
+        NodeRN node = (NodeRN) p;
 
         if (node.getLeft() != null) {
             vector.add(node.getLeft());
@@ -309,7 +383,7 @@ public class ClassRN implements BinaryTree{
 
     @Override
     public boolean isExternal(Position p) {
-        NodeBT node = (NodeBT) p;
+        NodeRN node = (NodeRN) p;
         return node.getLeft() == null && node.getRight() == null;
     }
 
@@ -320,13 +394,13 @@ public class ClassRN implements BinaryTree{
 
     @Override
     public boolean isRoot(Position p) {
-        NodeBT node = (NodeBT) p;
+        NodeRN node = (NodeRN) p;
         return node == root;
     }
 
     @Override
     public Object replace(Position p, Object o) {
-        NodeBT node = (NodeBT) p;
+        NodeRN node = (NodeRN) p;
         Object aux = node.getElement();
         node.setElement(o);
         return aux;
@@ -347,7 +421,7 @@ public class ClassRN implements BinaryTree{
         System.out.println("\n\n\n\n");
     }
 
-    private void mostrarRecursao(NodeBT node, int profundidade, ArrayList<StringBuffer> a) {
+    private void mostrarRecursao(NodeRN node, int profundidade, ArrayList<StringBuffer> a) {
         if (node == null) {
             return;
         }
