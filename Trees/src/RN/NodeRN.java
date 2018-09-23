@@ -16,12 +16,14 @@ public class NodeRN implements Position{
     private Object element;
     private NodeRN parent,left,right;
     private int color; // 0 = negro, 1 = rubro
+    private boolean doubleBlack;
    
     public NodeRN(int key, Object element, NodeRN parent) {
         this.key = key;
         this.element = element;
         this.parent = parent;
-        this.color = 0;
+        this.color = 1;
+        this.doubleBlack = false;
     }
 
     @Override

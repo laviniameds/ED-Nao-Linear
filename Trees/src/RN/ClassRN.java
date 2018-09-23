@@ -64,7 +64,7 @@ public class ClassRN implements BinaryTree{
             root.setParent(null);
         }
         
-        
+        //metodos de mudança de cor
     }
 
     //rotacao simples a direita
@@ -96,14 +96,65 @@ public class ClassRN implements BinaryTree{
             root.setParent(null);
         }
         
-        
+        //metodos de mudança de cor
     }
     
     //mudar coloração
     private void changeColor(NodeRN node){
+        if(node.getColor() == 0)
+            node.setColor(1);
+        else
+            node.setColor(0);
     }
     
     
+    //testa o pai
+    
+    private void testFather(NodeRN node) throws InvalidPositionException{
+        //pega o pai do nó
+        NodeRN father = node.getParent();
+        
+        //pega o tio do nó
+        NodeRN uncle = getSibling(father);
+        
+        //pai é rubro
+        if(father.getColor() == 1){
+            if(uncle != null){
+                case2(node);
+            }
+        }
+        else{
+            
+        }
+    }    
+    
+    //caso 2
+    private void case2(NodeRN node) throws InvalidPositionException{
+        NodeRN father = node.getParent();
+        NodeRN uncle = getSibling(father);
+        NodeRN grandpa = father.getParent();
+        while(father.getColor() == 1 && !isRoot(father)){
+            if(uncle.getColor() == 1){
+                changeColor(father);
+                changeColor(uncle);
+                changeColor(grandpa);
+            }
+            father = grandpa;
+            uncle = getSibling(grandpa);
+            grandpa = father.getParent();
+        }
+    }    
+    
+    //caso 3a
+    
+    
+    //caso 3b
+    
+    
+    //caso 3c
+    
+    
+    //caso 3d
     
     /*
     
@@ -128,7 +179,7 @@ public class ClassRN implements BinaryTree{
             } else {
                 aux.setLeft(node);
                 node.setParent(aux);
-                
+                testFather(node);
                 size++;
             }
         } else if (node.getKey() > aux.getKey()) {
@@ -138,7 +189,7 @@ public class ClassRN implements BinaryTree{
             } else {
                 aux.setRight(node);
                 node.setParent(aux);
-                
+                testFather(node);
                 size++;
             }
         } else {
