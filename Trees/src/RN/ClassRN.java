@@ -110,7 +110,7 @@ public class ClassRN implements BinaryTree{
     
     //testa o pai
     
-    private void testFather(NodeRN node) throws InvalidPositionException{
+    private void balance(NodeRN node) throws InvalidPositionException{
         //pega o pai do nó
         NodeRN father = node.getParent();
         
@@ -119,12 +119,23 @@ public class ClassRN implements BinaryTree{
         
         //pai é rubro
         if(father.getColor() == 1){
-            if(uncle != null){
-                case2(node);
+            //tio não é nulo e é rubro
+            if(uncle != null && uncle.getColor() == 1)
+                case2(node);           
+            else{
+                if(isLeftChild(father)){
+                    if(isLeftChild(node))
+                        case3a(node);                    
+                    else                     
+                        case3d(node);
+                }
+                else{
+                    if(isLeftChild(node))
+                        case3c(node);                   
+                    else
+                        case3b(node);
+                }
             }
-        }
-        else{
-            
         }
     }    
     
@@ -146,15 +157,54 @@ public class ClassRN implements BinaryTree{
     }    
     
     //caso 3a
-    
+    private void case3a(NodeRN node) throws InvalidPositionException{
+        RSD(node);
+        
+        NodeRN father = node.getParent();
+        NodeRN sibiling = getSibling(node);
+        
+        node.setColor(1);
+        father.setColor(0);
+        sibiling.setColor(1);
+    }
     
     //caso 3b
-    
+     private void case3b(NodeRN node) throws InvalidPositionException{
+        RSE(node);
+        
+        NodeRN father = node.getParent();
+        NodeRN sibiling = getSibling(node);
+        
+        node.setColor(1);
+        father.setColor(0);
+        sibiling.setColor(1);
+    }   
     
     //caso 3c
-    
+     private void case3c(NodeRN node) throws InvalidPositionException{
+        RSD(node);
+        RSE(node);
+        
+        NodeRN leftChild = node.getLeft();
+        NodeRN rightChild = node.getRight();
+        
+        node.setColor(0);
+        leftChild.setColor(1);
+        rightChild.setColor(1);
+    }   
     
     //caso 3d
+    private void case3d(NodeRN node){
+        RSE(node);
+        RSD(node);
+        
+        NodeRN leftChild = node.getLeft();
+        NodeRN rightChild = node.getRight();
+        
+        node.setColor(0);
+        leftChild.setColor(1);
+        rightChild.setColor(1);
+    }
     
     /*
     
@@ -165,8 +215,10 @@ public class ClassRN implements BinaryTree{
     @Override
     public void insert(int key, Object o) throws InvalidPositionException {
         NodeRN node = new NodeRN(key, o, null);
-        if (isEmpty()) 
+        if (isEmpty()) {
             root = node;
+            changeColor(root);
+        }
         else 
             insert(root, node);
     }
@@ -179,7 +231,7 @@ public class ClassRN implements BinaryTree{
             } else {
                 aux.setLeft(node);
                 node.setParent(aux);
-                testFather(node);
+                balance(node);
                 size++;
             }
         } else if (node.getKey() > aux.getKey()) {
@@ -189,7 +241,7 @@ public class ClassRN implements BinaryTree{
             } else {
                 aux.setRight(node);
                 node.setParent(aux);
-                testFather(node);
+                balance(node);
                 size++;
             }
         } else {
