@@ -111,6 +111,10 @@ public class ClassRN implements BinaryTree{
     //testa o pai
     
     private void balance(NodeRN node) throws InvalidPositionException{
+        
+        if(node.getParent() == null)
+            return;
+        
         //pega o pai do nó
         NodeRN father = node.getParent();
         
@@ -125,18 +129,23 @@ public class ClassRN implements BinaryTree{
             else{
                 if(isLeftChild(father)){
                     if(isLeftChild(node))
-                        case3a(node);                    
+                        case3a(father.getParent());                    
                     else                     
-                        case3d(node);
+                        case3d(father.getParent());
                 }
                 else{
                     if(isLeftChild(node))
-                        case3c(node);                   
+                        case3c(father.getParent());                   
                     else
-                        case3b(node);
+                        case3b(father.getParent());
                 }
             }
+                    
+            root.setColor(0);
+            balance(node.getParent());
         }
+        else
+            return;
     }    
     
     //caso 2
@@ -144,66 +153,44 @@ public class ClassRN implements BinaryTree{
         NodeRN father = node.getParent();
         NodeRN uncle = getSibling(father);
         NodeRN grandpa = father.getParent();
-        while(father.getColor() == 1 && !isRoot(father)){
-            if(uncle.getColor() == 1){
-                changeColor(father);
-                changeColor(uncle);
-                changeColor(grandpa);
-            }
-            father = grandpa;
-            uncle = getSibling(grandpa);
-            grandpa = father.getParent();
-        }
+        
+        changeColor(father);
+        changeColor(uncle);
+        changeColor(grandpa);       
     }    
     
     //caso 3a
     private void case3a(NodeRN node) throws InvalidPositionException{
-        RSD(node);
-        
-        NodeRN father = node.getParent();
-        NodeRN sibiling = getSibling(node);
+        RSD(node);     
         
         node.setColor(1);
-        father.setColor(0);
-        sibiling.setColor(1);
+        node.getParent().setColor(0);
     }
     
     //caso 3b
      private void case3b(NodeRN node) throws InvalidPositionException{
         RSE(node);
-        
-        NodeRN father = node.getParent();
-        NodeRN sibiling = getSibling(node);
-        
+ 
         node.setColor(1);
-        father.setColor(0);
-        sibiling.setColor(1);
+        node.getParent().setColor(0);
     }   
     
     //caso 3c
      private void case3c(NodeRN node) throws InvalidPositionException{
-        RSD(node);
-        RSE(node);
+        RSD(node.getRight());
+        RSE(node); 
         
-        NodeRN leftChild = node.getLeft();
-        NodeRN rightChild = node.getRight();
-        
-        node.setColor(0);
-        leftChild.setColor(1);
-        rightChild.setColor(1);
+        node.setColor(1);
+        node.getParent().setColor(0);
     }   
     
     //caso 3d
-    private void case3d(NodeRN node){
-        RSE(node);
-        RSD(node);
-        
-        NodeRN leftChild = node.getLeft();
-        NodeRN rightChild = node.getRight();
-        
-        node.setColor(0);
-        leftChild.setColor(1);
-        rightChild.setColor(1);
+    private void case3d(NodeRN node) throws InvalidPositionException{
+        RSE(node.getLeft());
+        RSD(node); 
+ 
+        node.setColor(1);
+        node.getParent().setColor(0);
     }
     
     /*
@@ -359,11 +346,15 @@ public class ClassRN implements BinaryTree{
     public NodeRN getSibling(Position p) throws InvalidPositionException {
         NodeRN no = (NodeRN) p;
         NodeRN father = no.getParent();
-        if (father.getLeft().getElement().equals(no.getElement())) {
+        
+        if(father == null)
+            return null;
+      
+        if(isLeftChild(no))
             return father.getRight();
-        } else {
+        else
             return father.getLeft();
-        }
+        
     }
 
     @Override
@@ -532,7 +523,7 @@ public class ClassRN implements BinaryTree{
         mostrarRecursao(node.getLeft(), profundidade + 1, a);
         for (int i = 0; i < height(root) + 1; ++i) {
             if (i == profundidade) {
-                a.get(i).append(node.getKey());
+                a.get(i).append(node.getKey() + String.valueOf(node.getColor()));
             } else {
                 a.get(i).append("  ");
             }

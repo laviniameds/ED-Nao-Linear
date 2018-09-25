@@ -49,7 +49,7 @@ public class Main {
         
         //teste remoção
         
-        binaria.remove(40);
+        /*binaria.remove(40);
         binaria.mostrar();
         
         binaria.remove(25);
@@ -71,7 +71,7 @@ public class Main {
         binaria.mostrar();
         
         binaria.remove(70);
-        binaria.mostrar();
+        binaria.mostrar();*/
         
     }
 }
