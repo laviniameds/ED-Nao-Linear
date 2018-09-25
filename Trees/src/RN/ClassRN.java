@@ -139,13 +139,11 @@ public class ClassRN implements BinaryTree{
                     else
                         case3b(father.getParent());
                 }
-            }
-                    
-            root.setColor(0);
-            balance(node.getParent());
+            }                           
         }
-        else
-            return;
+        
+        root.setColor(0);
+        balance(node.getParent());
     }    
     
     //caso 2
@@ -161,36 +159,58 @@ public class ClassRN implements BinaryTree{
     
     //caso 3a
     private void case3a(NodeRN node) throws InvalidPositionException{
-        RSD(node);     
+        RSD(node);
         
-        node.setColor(1);
-        node.getParent().setColor(0);
+        NodeRN leftChild = node.getLeft();
+        NodeRN rightChild = node.getRight();
+        
+        node.setColor(0);
+        
+        if(leftChild != null)
+            leftChild.setColor(1);
+        if(rightChild != null)
+            rightChild.setColor(1);         
     }
     
     //caso 3b
      private void case3b(NodeRN node) throws InvalidPositionException{
         RSE(node);
- 
-        node.setColor(1);
-        node.getParent().setColor(0);
+        
+        NodeRN leftChild = node.getLeft();
+        NodeRN rightChild = node.getRight();
+        
+        if(leftChild != null)
+            leftChild.setColor(1);
+        if(rightChild != null)
+            rightChild.setColor(1);    
     }   
     
     //caso 3c
      private void case3c(NodeRN node) throws InvalidPositionException{
         RSD(node.getRight());
-        RSE(node); 
+        RSE(node);
         
-        node.setColor(1);
-        node.getParent().setColor(0);
+        NodeRN leftChild = node.getLeft();
+        NodeRN rightChild = node.getRight();
+        
+        if(leftChild != null)
+            leftChild.setColor(1);
+        if(rightChild != null)
+            rightChild.setColor(1);       
     }   
     
     //caso 3d
     private void case3d(NodeRN node) throws InvalidPositionException{
         RSE(node.getLeft());
-        RSD(node); 
- 
-        node.setColor(1);
-        node.getParent().setColor(0);
+        RSD(node);
+        
+        NodeRN leftChild = node.getLeft();
+        NodeRN rightChild = node.getRight();
+        
+        if(leftChild != null)
+            leftChild.setColor(1);
+        if(rightChild != null)
+            rightChild.setColor(1); 
     }
     
     /*
