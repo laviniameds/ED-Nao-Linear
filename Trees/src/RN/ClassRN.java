@@ -108,7 +108,7 @@ public class ClassRN implements BinaryTree{
     }
     
     
-    //testa o pai
+    //balanceia
     
     private void balance(NodeRN node) throws InvalidPositionException{
         
@@ -141,9 +141,7 @@ public class ClassRN implements BinaryTree{
                 }
             }                           
         }
-        
         root.setColor(0);
-        balance(node.getParent());
     }    
     
     //caso 2
@@ -154,35 +152,25 @@ public class ClassRN implements BinaryTree{
         
         changeColor(father);
         changeColor(uncle);
-        changeColor(grandpa);       
+        changeColor(grandpa); 
+        
+        balance(grandpa);
     }    
     
     //caso 3a
     private void case3a(NodeRN node) throws InvalidPositionException{
         RSD(node);
         
-        NodeRN leftChild = node.getLeft();
-        NodeRN rightChild = node.getRight();
-        
-        node.setColor(0);
-        
-        if(leftChild != null)
-            leftChild.setColor(1);
-        if(rightChild != null)
-            rightChild.setColor(1);         
+        node.setColor(1);
+        node.getParent().setColor(0);         
     }
     
     //caso 3b
      private void case3b(NodeRN node) throws InvalidPositionException{
         RSE(node);
         
-        NodeRN leftChild = node.getLeft();
-        NodeRN rightChild = node.getRight();
-        
-        if(leftChild != null)
-            leftChild.setColor(1);
-        if(rightChild != null)
-            rightChild.setColor(1);    
+        node.setColor(1);
+        node.getParent().setColor(0);   
     }   
     
     //caso 3c
@@ -190,13 +178,8 @@ public class ClassRN implements BinaryTree{
         RSD(node.getRight());
         RSE(node);
         
-        NodeRN leftChild = node.getLeft();
-        NodeRN rightChild = node.getRight();
-        
-        if(leftChild != null)
-            leftChild.setColor(1);
-        if(rightChild != null)
-            rightChild.setColor(1);       
+        node.setColor(1);
+        node.getParent().setColor(0);    
     }   
     
     //caso 3d
@@ -204,13 +187,8 @@ public class ClassRN implements BinaryTree{
         RSE(node.getLeft());
         RSD(node);
         
-        NodeRN leftChild = node.getLeft();
-        NodeRN rightChild = node.getRight();
-        
-        if(leftChild != null)
-            leftChild.setColor(1);
-        if(rightChild != null)
-            rightChild.setColor(1); 
+        node.setColor(1);
+        node.getParent().setColor(0);
     }
     
     /*
@@ -257,6 +235,8 @@ public class ClassRN implements BinaryTree{
     }
 
     private boolean isLeftChild(NodeRN node) {
+        if(node.getParent() == null)
+            return false;
         return node.getKey() < node.getParent().getKey();
     }
 
@@ -543,7 +523,10 @@ public class ClassRN implements BinaryTree{
         mostrarRecursao(node.getLeft(), profundidade + 1, a);
         for (int i = 0; i < height(root) + 1; ++i) {
             if (i == profundidade) {
-                a.get(i).append(node.getKey() + String.valueOf(node.getColor()));
+                String color = "R";
+                if(node.getColor() == 0)
+                    color = "N";
+                a.get(i).append(node.getKey() + color);
             } else {
                 a.get(i).append("  ");
             }
