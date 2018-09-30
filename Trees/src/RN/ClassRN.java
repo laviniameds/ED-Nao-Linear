@@ -112,9 +112,15 @@ public class ClassRN implements BinaryTree{
             node.setColor(0);
     }
     
+    private boolean hasBothChildren(NodeRN node) throws InvalidPositionException{
+        if(hasLeft(node) && hasRight(node))
+            return true;
+        return false;
+    }
+    
     private boolean childrenAreBlack(NodeRN node) throws InvalidPositionException{
         
-        if(hasLeft(node) && hasRight(node))
+        if(hasBothChildren(node))
             if(node.getLeft().getColor() == 0 && node.getRight().getColor() == 0)
                 return true;
         
@@ -171,8 +177,25 @@ public class ClassRN implements BinaryTree{
         //nó que foi removido é negro
         if(node.getColor() == 0 && sibiling != null){
             
+            //tem pai de qualquer cor e irmão negro
+            if(sibiling.getColor() == 0){
+                if(hasBothChildren(sibiling)){
+                    if(sibiling.getLeft().getColor() == 1 &&
+                            sibiling.getRight().getColor() == 0){
+                        
+                        case3a(sibiling);                       
+                    }
+                    else if(sibiling.getRight().getColor() == 1){
+                        RSE(father);
+                        sibiling.setColor(father.getColor());
+                        father.setColor(0);
+                        sibiling.getRight().setColor(0);
+                    }
+                }
+            }
+            
             //pai é negro
-            if(father.getColor() == 0){               
+            else if(father.getColor() == 0){               
                 if(sibiling.getColor() == 1){
                     //marca duplo negro
                     father.changeDoubleBlack(true);
@@ -192,7 +215,12 @@ public class ClassRN implements BinaryTree{
             else{
                 //irmão é negro
                 if(sibiling.getColor() == 0){
-                    
+                    //pinta o irmão de rubro
+                    sibiling.setColor(1);
+                    //pita o pai de negro
+                    father.setColor(0);
+                    //retira o duplo negro do pai
+                    father.changeDoubleBlack(false);
                 }
             }
         }        
