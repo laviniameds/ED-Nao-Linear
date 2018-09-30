@@ -16,61 +16,15 @@ public class Main {
     public static void main(String[] args) throws InvalidPositionException{
         ClassRN rubroNegra = new ClassRN();
         
-        rubroNegra.insert(10, 10);
+        rubroNegra.insert(4, 4);
+        rubroNegra.insert(26, 26);
+        rubroNegra.insert(3, 3);
+        rubroNegra.insert(9, 9);
+        rubroNegra.insert(15, 15);
+        
         rubroNegra.mostrar();
         
-        rubroNegra.insert(20, 20);
-        rubroNegra.mostrar();  
-        
-        rubroNegra.insert(30, 30);
+        rubroNegra.remove(3);
         rubroNegra.mostrar();
-        
-        rubroNegra.insert(40, 40);
-        rubroNegra.mostrar();
-        
-        rubroNegra.insert(50, 50);
-        rubroNegra.mostrar();
-        
-        rubroNegra.insert(25, 25);
-        rubroNegra.mostrar();
-        
-        rubroNegra.insert(60, 60);
-        rubroNegra.mostrar();
-        
-        rubroNegra.insert(70, 70);
-        rubroNegra.mostrar();
-        
-        rubroNegra.insert(80, 80);
-        rubroNegra.mostrar();
-        
-        rubroNegra.insert(35, 35);
-        rubroNegra.mostrar();
-        
-        //teste remoção
-        
-        /*rubroNegra.remove(40);
-        rubroNegra.mostrar();
-        
-        rubroNegra.remove(25);
-        rubroNegra.mostrar();
-        
-        rubroNegra.remove(50);
-        rubroNegra.mostrar();        
-        
-        rubroNegra.remove(10);
-        rubroNegra.mostrar();        
-        
-        rubroNegra.remove(35);
-        rubroNegra.mostrar();
-        
-        rubroNegra.remove(30);
-        rubroNegra.mostrar();
-        
-        rubroNegra.remove(20);
-        rubroNegra.mostrar();
-        
-        rubroNegra.remove(70);
-        rubroNegra.mostrar();*/
-        
     }
 }

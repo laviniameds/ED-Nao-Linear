@@ -20,6 +20,11 @@ import java.util.Vector;
  */
 public class ClassRN implements BinaryTree{
     
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_DB = "\u001B[30m";
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK = "\u001b[1m";
+    
     private NodeRN root;
     private int size;
 
@@ -35,7 +40,7 @@ public class ClassRN implements BinaryTree{
     
     */
     
-        //rotacao simples a esquerda   
+    //rotacao simples a esquerda   
     private void RSE(NodeRN node) {                      
         NodeRN backupRightSubTree = node.getRight();
         
@@ -107,9 +112,16 @@ public class ClassRN implements BinaryTree{
             node.setColor(0);
     }
     
+    private boolean childrenAreBlack(NodeRN node) throws InvalidPositionException{
+        
+        if(hasLeft(node) && hasRight(node))
+            if(node.getLeft().getColor() == 0 && node.getRight().getColor() == 0)
+                return true;
+        
+        return false;
+    }
     
-    //balanceia
-    
+    //balanceia na inserção
     private void balance(NodeRN node) throws InvalidPositionException{
         
         if(node.getParent() == null)
@@ -142,7 +154,49 @@ public class ClassRN implements BinaryTree{
             }                           
         }
         root.setColor(0);
-    }    
+    }
+
+
+    private void balanceRemove(NodeRN node) throws InvalidPositionException{
+        
+        //pega o pai do nó
+        NodeRN father = node.getParent();
+        
+        if(father == null)
+            return;
+        
+        //pega o irmão do nó
+        NodeRN sibiling = getSibling(node);
+        
+        //nó que foi removido é negro
+        if(node.getColor() == 0 && sibiling != null){
+            
+            //pai é negro
+            if(father.getColor() == 0){               
+                if(sibiling.getColor() == 1){
+                    //marca duplo negro
+                    father.changeDoubleBlack(true);
+                    case3b(father);
+                }
+                else {
+                    if(childrenAreBlack(sibiling)){
+                        //pinta o irmão de rubro se os filhos forem negros
+                        sibiling.setColor(1);
+                        //tira o duplo negro do pai e passa pro avô
+                        father.changeDoubleBlack(false);
+                        father.getParent().changeDoubleBlack(true);
+                    }                   
+                }                
+            }
+            //pai é rubro
+            else{
+                //irmão é negro
+                if(sibiling.getColor() == 0){
+                    
+                }
+            }
+        }        
+    }
     
     //caso 2
     private void case2(NodeRN node) throws InvalidPositionException{
@@ -248,12 +302,14 @@ public class ClassRN implements BinaryTree{
         if(r.getParent() == null)
             root = r;
         
+        balanceRemove(r);
         
         return r;
     }
 
     private NodeRN remove(NodeRN node) throws InvalidPositionException {
-        if (node != null) {
+        if (node != null) {         
+            
             //o nó não tem filhos
             if (isExternal(node)) {
                 if (isLeftChild(node)) 
@@ -523,10 +579,12 @@ public class ClassRN implements BinaryTree{
         mostrarRecursao(node.getLeft(), profundidade + 1, a);
         for (int i = 0; i < height(root) + 1; ++i) {
             if (i == profundidade) {
-                String color = "R";
+                String color = ANSI_RED;
                 if(node.getColor() == 0)
-                    color = "N";
-                a.get(i).append(node.getKey() + color);
+                    color = ANSI_BLACK;
+                if(node.isDoubleBlack())
+                    color = ANSI_DB;
+                a.get(i).append(color + node.getKey() + ANSI_RESET);
             } else {
                 a.get(i).append("  ");
             }

@@ -25,6 +25,14 @@ public class NodeRN implements Position{
         this.color = 1;
         this.doubleBlack = false;
     }
+    
+    public void changeDoubleBlack(boolean db){
+        this.doubleBlack = db;
+    }
+    
+    public boolean isDoubleBlack(){
+        return this.doubleBlack;
+    }
 
     @Override
     public Object getElement() {
