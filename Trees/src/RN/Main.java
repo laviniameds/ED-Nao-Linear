@@ -7,6 +7,7 @@ package RN;
 
 import RN.ClassRN;
 import interfaces.InvalidPositionException;
+import java.util.Scanner;
 
 /**
  *
@@ -16,15 +17,36 @@ public class Main {
     public static void main(String[] args) throws InvalidPositionException{
         ClassRN rubroNegra = new ClassRN();
         
-        rubroNegra.insert(4, 4);
-        rubroNegra.insert(26, 26);
-        rubroNegra.insert(3, 3);
-        rubroNegra.insert(9, 9);
-        rubroNegra.insert(15, 15);
+        Scanner sc = new Scanner(System.in);
+        String menu = "\n\n0 - Sair\n1 - Inserir\n2 - Remover\n3 - Mostrar";
+        String menu2 = "digite o numero:";
+        Integer op = -1;
         
-        rubroNegra.mostrar();
-        
-        rubroNegra.remove(3);
-        rubroNegra.mostrar();
+        while(op != 0){
+            System.out.println(menu);
+            op = sc.nextInt();
+            
+            Integer n;
+            
+            switch(op){
+                case 1:
+                    System.out.println(menu2);
+                    n = sc.nextInt();
+                    rubroNegra.insert(n, n);
+                    break;
+                case 2:
+                    System.out.println(menu2);
+                    n = sc.nextInt();
+                    rubroNegra.remove(n);
+                    break;
+                case 3:
+                    rubroNegra.mostrar();
+                    break;
+                case 0:
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

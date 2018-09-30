@@ -585,6 +585,7 @@ public class ClassRN implements BinaryTree{
     }
 
     public void mostrar() {
+        System.out.println("\n\n\n\n");
         ArrayList<StringBuffer> a = new ArrayList<>();
         int altura = height(root) + 1;
 
