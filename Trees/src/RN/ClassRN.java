@@ -162,7 +162,6 @@ public class ClassRN implements BinaryTree{
         root.setColor(0);
     }
 
-
     private void balanceRemove(NodeRN node) throws InvalidPositionException{
         
         //pega o pai do nó
@@ -179,16 +178,23 @@ public class ClassRN implements BinaryTree{
             
             //tem pai de qualquer cor e irmão negro
             if(sibiling.getColor() == 0){
+                //o irmão tem dois filhos
                 if(hasBothChildren(sibiling)){
+                    //o filho esquerdo é rubro e o direito é negro
                     if(sibiling.getLeft().getColor() == 1 &&
                             sibiling.getRight().getColor() == 0){
-                        
+                        //aplica o caso 3a
                         case3a(sibiling);                       
                     }
+                    //o filho esquerdo é de qualquer cor e o direito é rubro
                     else if(sibiling.getRight().getColor() == 1){
+                        //faz uma rotação a esquerda
                         RSE(father);
+                        //colore o irmão com a cor do pai
                         sibiling.setColor(father.getColor());
+                        //colore o pai de negro
                         father.setColor(0);
+                        //colore o filho direito de negro
                         sibiling.getRight().setColor(0);
                     }
                 }
