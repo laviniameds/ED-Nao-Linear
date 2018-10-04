@@ -67,9 +67,7 @@ public class ClassRN implements BinaryTree{
         if(isRoot(node)){
             root = backupRightSubTree;
             root.setParent(null);
-        }
-        
-        //metodos de mudança de cor
+        }       
     }
 
     //rotacao simples a direita
@@ -100,11 +98,9 @@ public class ClassRN implements BinaryTree{
             root = backupLeftSubTree;
             root.setParent(null);
         }
-        
-        //metodos de mudança de cor
     }
     
-    //mudar coloração
+    //inverter coloração
     private void changeColor(NodeRN node){
         if(node.getColor() == 0)
             node.setColor(1);
@@ -112,12 +108,14 @@ public class ClassRN implements BinaryTree{
             node.setColor(0);
     }
     
+    //so nó tem 2 filhos?
     private boolean hasBothChildren(NodeRN node) throws InvalidPositionException{
         if(hasLeft(node) && hasRight(node))
             return true;
         return false;
     }
     
+    //ambos os filhos sao negros
     private boolean childrenAreBlack(NodeRN node) throws InvalidPositionException{
         
         if(hasBothChildren(node))
@@ -130,6 +128,7 @@ public class ClassRN implements BinaryTree{
     //balanceia na inserção
     private void balance(NodeRN node) throws InvalidPositionException{
         
+        //se o nó nao tem pai, retorna
         if(node.getParent() == null)
             return;
         
@@ -143,30 +142,40 @@ public class ClassRN implements BinaryTree{
         if(father.getColor() == 1){
             //tio não é nulo e é rubro
             if(uncle != null && uncle.getColor() == 1)
-                case2(node);           
+                case2(node); 
+            //se não
             else{
+                //se o pai é filho esquerdo
                 if(isLeftChild(father)){
+                    //se o nó é filho esquerdo
                     if(isLeftChild(node))
                         case3a(father.getParent());                    
+                    //se o nó é filho direito
                     else                     
                         case3d(father.getParent());
                 }
+                //se o pai é filho direito
                 else{
+                    //se o nó é filho esquerdo
                     if(isLeftChild(node))
                         case3c(father.getParent());                   
+                    //se o nó é filho direito
                     else
                         case3b(father.getParent());
                 }
             }                           
         }
+        //força o root a ser negro ao final de qualquer operação
         root.setColor(0);
     }
 
+    //balanceia na remoção
     private void balanceRemove(NodeRN node) throws InvalidPositionException{
         
         //pega o pai do nó
         NodeRN father = node.getParent();
         
+        //se o pai for nulo
         if(father == null)
             return;
         
@@ -200,14 +209,18 @@ public class ClassRN implements BinaryTree{
                 }
             }
             
-            //pai é negro
-            else if(father.getColor() == 0){               
+            //pai do nó removido é negro
+            else if(father.getColor() == 0){ 
+                //irmão é rubro
                 if(sibiling.getColor() == 1){
                     //marca duplo negro
                     father.changeDoubleBlack(true);
+                    //faz o caso 3b
                     case3b(father);
                 }
+                //irmão é negro
                 else {
+                    //se ambos os filhos do irmão forem negros
                     if(childrenAreBlack(sibiling)){
                         //pinta o irmão de rubro se os filhos forem negros
                         sibiling.setColor(1);
@@ -242,22 +255,29 @@ public class ClassRN implements BinaryTree{
         changeColor(uncle);
         changeColor(grandpa); 
         
+        //chama recursivamente o balance passando o avô
         balance(grandpa);
     }    
     
     //caso 3a
     private void case3a(NodeRN node) throws InvalidPositionException{
+        //faz uma rotação no nó
         RSD(node);
         
+        //muda a cor do nó pra rubro
         node.setColor(1);
+        //muda a cor do pai do nó pra negro
         node.getParent().setColor(0);         
     }
     
     //caso 3b
      private void case3b(NodeRN node) throws InvalidPositionException{
+        //faz uma rotação no nó
         RSE(node);
         
+        //muda a cor do nó pra rubro
         node.setColor(1);
+        //muda a cor do pai do nó pra negro
         node.getParent().setColor(0);   
     }   
     
@@ -266,7 +286,9 @@ public class ClassRN implements BinaryTree{
         RSD(node.getRight());
         RSE(node);
         
+        //muda a cor do nó pra rubro
         node.setColor(1);
+        //muda a cor do pai do nó pra negro
         node.getParent().setColor(0);    
     }   
     
@@ -275,7 +297,9 @@ public class ClassRN implements BinaryTree{
         RSE(node.getLeft());
         RSD(node);
         
+        //muda a cor do nó pra rubro
         node.setColor(1);
+        //muda a cor do pai do nó pra negro
         node.getParent().setColor(0);
     }
     
