@@ -202,12 +202,12 @@ public class ClassRN implements BinaryTree{
                 node.changeDoubleBlack(false);
                 father.changeDoubleBlack(true);
             }
-            /*else if(sibiling.getColor() == 0 && childrenAreBlack(sibiling) && father.getColor() == 1){
+            else if(sibiling.getColor() == 0 && childrenAreBlack(sibiling) && father.getColor() == 1){
                 sibiling.setColor(1);
                 father.setColor(0);
                 node.changeDoubleBlack(false);
             }
-            else if(sibiling.getColor() == 0 && sibiling.getRight().getColor() == 1){
+            /*else if(sibiling.getColor() == 0 && sibiling.getRight().getColor() == 1){
                 RSE(father);
                 sibiling.setColor(father.getColor());
                 father.setColor(0);
