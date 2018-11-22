@@ -22,6 +22,18 @@ public class Graph implements IGraph{
         this.qtdVertices = 0;
         this.vertices = new Vector();
     }
+    
+    public int findIndex(int key){
+        Iterator I = vertices.iterator();
+        int index = 0;        
+        while(I.hasNext()){     
+            Vertex v = (Vertex)(I.next());            
+            if(v.getKey()== key)// achei
+                return index;
+            index++;
+        }
+        return -1; // nao achei
+    }
 
     @Override
     public void insertVertex(Vertex vertex) {
@@ -30,50 +42,77 @@ public class Graph implements IGraph{
 
     @Override
     public void removeVertex(Vertex vertex) {
-        qtdVertices--;
-        int indice=achaindice(Vertice.getChave());
-        vertices.remove(indice);  // remove o v�rtice do vector    
-        // remove linhas e colunas da matriz de adjac�ncia
-        Arestas tempMatrizAdj[][]=new Arestas[qtdVertices][qtdVertices];
-        int ff=0,gg;
-        for(int f=0;f<qtdVertices+1;f++){
-            gg=0;
-            for(int g=0;g<qtdVertices+1;g++){
-                if(f!=indice && g!=indice){
-                  tempMatrizAdj[ff][gg]= matrizAdj[f][g];                  
-                  if(g!=indice)
-                      gg++;                  
-                }                
-            }
-            if(f!=indice)
-                ff++;
-        }
-        matrizAdj=tempMatrizAdj;
+       qtdVertices--;
+       int index = findIndex(vertex.getKey());
+       vertices.remove(index);  // remove o vertice do vector    
+       // remove linhas e colunas da matriz de adjac�ncia
+       Edge tempMatrixAdj[][] = new Edge[qtdVertices][qtdVertices];
+       int ff = 0,gg;
+       for(int f=0;f<qtdVertices+1;f++){
+           gg=0;
+           for(int g=0;g<qtdVertices+1;g++){
+               if(f!=index && g!=index){
+                 tempMatrixAdj[ff][gg] = this.matrixAjd[f][g];                  
+                 if(g!=index)
+                     gg++;                  
+               }                
+           }
+           if(f!=index)
+               ff++;
+       }
+       this.matrixAjd=tempMatrixAdj;       
     }
 
     @Override
     public Edge insertEdge(Vertex vertex1, Vertex vertex2, double value) {
+        Edge edge = new Edge(vertex1, vertex2, value); 
         
+        int index1 = findIndex(vertex1.getKey());
+        int index2 = findIndex(vertex2.getKey());
+        
+        matrixAjd[index1][index2] = matrixAjd[index2][index1]= edge; // grafo nao orientado
+        return edge;        
     }
 
     @Override
     public Edge insertEdge(Vertex vertex1, Vertex vertex2) {
+        Edge edge = new Edge(vertex1, vertex2); 
         
+        int index1 = findIndex(vertex1.getKey());
+        int index2 = findIndex(vertex2.getKey());
+        
+        matrixAjd[index1][index2] = matrixAjd[index2][index1]= edge; // grafo nao orientado
+        return edge;          
     }
 
     @Override
     public void removeEdge(Edge edge) {
+        int index1 = findIndex(edge.getVertexFrom().getKey());
+        int index2 = findIndex(edge.getVertexTo().getKey());
         
+        matrixAjd[index1][index2] = matrixAjd[index2][index1] = null; // grafo nao orientado       
     }
 
     @Override
     public Edge insertArc(Vertex vertex1, Vertex vertex2, double value) {
-        
+       Edge edge = new Edge(vertex1, vertex2, value); 
+
+       int index1 = findIndex(vertex1.getKey());
+       int index2 = findIndex(vertex2.getKey());
+       
+       matrixAjd[index1][index2] = edge; // grafo orientado
+       return edge;       
     }
 
     @Override
     public Edge insertArc(Vertex vertex1, Vertex vertex2) {
-        
+       Edge edge = new Edge(vertex1, vertex2, 0, true); 
+
+       int index1 = findIndex(vertex1.getKey());
+       int index2 = findIndex(vertex2.getKey());
+       
+       matrixAjd[index1][index2] = edge; // grafo orientado
+       return edge;       
     }
 
     @Override
@@ -88,18 +127,29 @@ public class Graph implements IGraph{
 
     @Override
     public int order() {
-        
+        return qtdVertices;
     }
 
     @Override
     public Vector vertices() {
-        
+        return vertices;
     }
 
     @Override
     public Vector edges() {
-        
+        Vector v = new Vector();
+        for(int l=0;l<qtdVertices;l++)
+            for(int c=0;c<qtdVertices;c++)                
+                v.add(matrixAjd[l][c]);
+        return v;       
     }
+    
+    public Edge getEdge(Vertex vertex1, Vertex vertex2){
+        int index1 = findIndex(vertex1.getKey());
+        int index2 = findIndex(vertex2.getKey());
+        
+        return (matrixAjd[index1][index2]);        
+    }   
 
     @Override
     public Vector incidentEdges(Vertex vertex) {
@@ -108,7 +158,10 @@ public class Graph implements IGraph{
 
     @Override
     public Vector lastVertices(Edge edge) {
-        
+        Vector v=new Vector();
+        v.add(edge.getVertexFrom());
+        v.add(edge.getVertexTo());
+        return v;        
     }
 
     @Override
@@ -118,128 +171,22 @@ public class Graph implements IGraph{
 
     @Override
     public boolean isAdjacent(Vertex vertex1, Vertex vertex2) {
+        int index1 = findIndex(vertex1.getKey());
+        int index2 = findIndex(vertex2.getKey());
         
+        return (matrixAjd[index1][index2])!= null;       
     }
     
-//        
-//    
-//    public Arestas insereAresta(Vertices VerticeUm, Vertices VerticeDois,
-//                             double valor){
-//        Arestas A=new Arestas(VerticeUm, VerticeDois, valor);      
-//        int ind1=achaindice(VerticeUm.getChave());
-//        int ind2=achaindice(VerticeDois.getChave());
-//        matrizAdj[ind1][ind2]=matrizAdj[ind2][ind1]=A; // grafo nao orientado
-//        return A;
-//    }
-//
-//	public Arestas insereAresta(Vertices VerticeUm, Vertices VerticeDois){		
-//	    Arestas A=new Arestas(VerticeUm, VerticeDois);      
-//        int ind1=achaindice(VerticeUm.getChave());
-//        int ind2=achaindice(VerticeDois.getChave());
-//		matrizAdj[ind1][ind2] = matrizAdj[ind2][ind1] = A; // grafo nao orientado
-//		return A;
-//	}   
-//    
-//    public void removeAresta(Arestas Aresta){        
-//        int ind1=achaindice(Aresta.getVerticeOrigem().getChave());
-//        int ind2=achaindice(Aresta.getVerticeDestino().getChave());
-//        matrizAdj[ind1][ind2]=matrizAdj[ind2][ind1]=null; // grafo nao orientado
-//    }
-//    
-//    public Arestas insereArco(Vertices VerticeUm, Vertices VerticeDois,double valor){
-//        Arestas A=new Arestas(VerticeUm, VerticeDois,valor,true);         
-//        int ind1=achaindice(VerticeUm.getChave());
-//        int ind2=achaindice(VerticeDois.getChave());
-//        matrizAdj[ind1][ind2]=A; // grafo orientado
-//        return A;
-//    }
-//
-//	public Arestas insereArco(Vertices VerticeUm, Vertices VerticeDois){
-//	    Arestas A=new Arestas(VerticeUm, VerticeDois,0,true);		
-//		int ind1 = achaindice(VerticeUm.getChave());
-//		int ind2 = achaindice(VerticeDois.getChave());
-//		matrizAdj[ind1][ind2] = A; // grafo orientado
-//		return A;
-//	}
-//    
-//    public void removeArco(Arestas Aresta){   // grafo orientado     
-//     // m�todo exerc�cio, fique a vontade para implementa-lo coleguinha   
-//    }
-//    
-//    public void mostraVertices(){
-//        for(int f=0;f<vertices.size();f++)
-//            System.out.print(vertices.elementAt(f)+",");        
-//    }
-//    
-//    public void mostraMatriz(){
-//        for(int f=0;f<qtdVertices;f++){
-//            for(int g=0;g<qtdVertices;g++)
-//               System.out.print(matrizAdj[f][g]+" ");
-//            System.out.println();
-//        }        
-//    }
-//    
-//    public int grau(Vertices Vertice){
-//        // m�todo exerc�cio, fique a vontade para implementa-lo coleguinha     
-//        return 0;
-//    }
-//    
-//    public int ordem(){
-//        return qtdVertices;
-//    }
-//    
-//    private int achaindice(int chave){
-//        Iterator I=vertices.iterator();
-//        int ind=0;        
-//        while(I.hasNext()){     
-//            Vertices v=(Vertices)(I.next());            
-//            if(v.getChave()==chave)// achei
-//                return ind;
-//            ind++;
-//        }
-//        return -1; // nao achei
-//    }
-//    
-//    public Vector vertices(){
-//        return vertices;
-//    }
-//
-//    public Vector arestas(){
-//        Vector v=new Vector();
-//        for(int l=0;l<qtdVertices;l++)
-//            for(int c=0;c<qtdVertices;c++)                
-//                v.add(matrizAdj[l][c]);
-//        return v;
-//    }
-//    
-//    public Vector arestasIncidentes(Vertices vertice){
-//     // m�todo exerc�cio, fique a vontade para implementa-lo coleguinha 
-//        return null;
-//    }
-//    
-//    public Vector finalVertices(Arestas a){
-//        Vector v=new Vector();
-//        v.add(a.getVerticeOrigem());
-//        v.add(a.getVerticeDestino());
-//        return v;
-//    }
-//    
-//    public Vertices oposto(Vertices v,Arestas a) throws OpostoError {
-//     // m�todo exerc�cio, fique a vontade para implementa-lo coleguinha 
-//     return null;
-//    }
-//    
-//    public boolean Adjacente(Vertices v, Vertices w){
-//        int ind1=achaindice(v.getChave());
-//        int ind2=achaindice(w.getChave());
-//        return (matrizAdj[ind1][ind2])!=null;
-//        
-//    }
-//    
-//    public Arestas getAresta(Vertices v, Vertices w){
-//        int ind1=achaindice(v.getChave());
-//        int ind2=achaindice(w.getChave());
-//        return (matrizAdj[ind1][ind2]);        
-//    }
-//    
+    public void showVertices(){
+        for(int f=0;f<vertices.size();f++)
+        System.out.print(vertices.elementAt(f)+","); 
+    }
+  
+    public void showMatrix(){
+        for(int f=0;f<qtdVertices;f++){
+            for(int g=0;g<qtdVertices;g++)
+               System.out.print(matrixAjd[f][g]+" ");
+            System.out.println();
+        }        
+    }
 }
