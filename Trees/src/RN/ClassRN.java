@@ -119,8 +119,9 @@ public class ClassRN implements BinaryTree{
     private boolean childrenAreBlack(NodeRN node) throws InvalidPositionException{
         
         //if(hasBothChildren(node))
-            if(node.getLeft().getColor() == 0 && node.getRight().getColor() == 0)
-                return true;
+        if((node.getLeft() == null || node.getLeft().getColor() == 0) &&
+                (node.getRight() == null || node.getRight().getColor() == 0))
+            return true;
         
         return false;
     }
@@ -186,33 +187,28 @@ public class ClassRN implements BinaryTree{
             if(sibiling == null || sibiling.getColor() == 0){
                 //pinta nó de negro
                 node.setColor(0);
+                
             }                          
         }
         //nó é negro
         else{
             //irmão é rubro e pai é negro
-            if(sibiling.getColor() == 1 && father.getColor() == 0){
+            if(sibiling != null && sibiling.getColor() == 1 && father.getColor() == 0){
                 node.changeDoubleBlack(true);
                 RSE(father);
                 sibiling.setColor(0);
                 father.setColor(1);
             }
-            else if(sibiling.getColor() == 0 && childrenAreBlack(sibiling) && father.getColor() == 0){
+            else if((sibiling != null || sibiling.getColor() == 0) && childrenAreBlack(sibiling) && father.getColor() == 0){
                 sibiling.setColor(1);
                 node.changeDoubleBlack(false);
                 father.changeDoubleBlack(true);
             }
-            else if(sibiling.getColor() == 0 && childrenAreBlack(sibiling) && father.getColor() == 1){
+            else if((sibiling != null || sibiling.getColor() == 0) && childrenAreBlack(sibiling) && father.getColor() == 1){
                 sibiling.setColor(1);
                 father.setColor(0);
                 node.changeDoubleBlack(false);
             }
-            /*else if(sibiling.getColor() == 0 && sibiling.getRight().getColor() == 1){
-                RSE(father);
-                sibiling.setColor(father.getColor());
-                father.setColor(0);
-                sibiling.getRight().setColor(0);
-            }*/
         }
         balanceRemove(father);
     }
