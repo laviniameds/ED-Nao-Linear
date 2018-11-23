@@ -34,13 +34,22 @@ public class Graph implements IGraph{
         }
         return -1; // nao achei
     }
-
-    /*
-    TO DO
-    */ 
+ 
     @Override
     public void insertVertex(Vertex vertex) {
+        qtdVertices++;
+        vertices.add(vertex);
+        Edge tempMatrixAdj[][] = new Edge[qtdVertices][qtdVertices];
         
+        for(int f = 0; f < qtdVertices - 1; f++)
+            for(int g = 0; g < qtdVertices - 1; g++)
+                  tempMatrixAdj[f][g] = matrixAjd[f][g];              
+                   
+        for(int g = 0;g <qtdVertices-1;g++)
+            tempMatrixAdj[qtdVertices-1][g] = tempMatrixAdj[g][qtdVertices-1] = null;          
+        
+        
+        matrixAjd = tempMatrixAdj;        
     }
 
     @Override
@@ -126,12 +135,9 @@ public class Graph implements IGraph{
         
     }
     
-    /*
-    TO DO
-    */ 
     @Override
     public int grade(Vertex vertex) {
-        return 0;
+        return incidentEdges(vertex).size();
     }
 
     @Override
