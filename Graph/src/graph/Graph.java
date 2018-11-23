@@ -35,6 +35,9 @@ public class Graph implements IGraph{
         return -1; // nao achei
     }
 
+    /*
+    TO DO
+    */ 
     @Override
     public void insertVertex(Vertex vertex) {
         
@@ -115,14 +118,20 @@ public class Graph implements IGraph{
        return edge;       
     }
 
+    /*
+    TO DO
+    */  
     @Override
     public void removeArc(Edge edge) {
         
     }
-
+    
+    /*
+    TO DO
+    */ 
     @Override
     public int grade(Vertex vertex) {
-        
+        return 0;
     }
 
     @Override
@@ -149,11 +158,14 @@ public class Graph implements IGraph{
         int index2 = findIndex(vertex2.getKey());
         
         return (matrixAjd[index1][index2]);        
-    }   
-
+    }  
+    
+    /*
+    TO DO
+    */ 
     @Override
     public Vector incidentEdges(Vertex vertex) {
-        
+        return null;
     }
 
     @Override
@@ -163,10 +175,22 @@ public class Graph implements IGraph{
         v.add(edge.getVertexTo());
         return v;        
     }
-
+    
     @Override
     public Vertex opposite(Vertex vertex, Edge edge) {
+        Vertex from = edge.getVertexFrom();
+        Vertex to = edge.getVertexTo();
         
+        if(vertex.getKey() == from.getKey()){
+            if(isAdjacent(vertex, to))
+                return to;
+        }
+        else if(vertex.getKey() == to.getKey()){
+            if(isAdjacent(vertex, from))
+                return from;            
+        }
+        
+        return null;
     }
 
     @Override
