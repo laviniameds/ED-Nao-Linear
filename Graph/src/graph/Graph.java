@@ -160,12 +160,18 @@ public class Graph implements IGraph{
         return (matrixAjd[index1][index2]);        
     }  
     
-    /*
-    TO DO
-    */ 
     @Override
     public Vector incidentEdges(Vertex vertex) {
-        return null;
+        Iterator I = edges().iterator();
+        Vector<Edge> vectorEdges = new Vector<>();
+        
+        while(I.hasNext()){     
+            Edge edge = (Edge)(I.next());            
+            if(edge.getVertexTo().getKey() == vertex.getKey())
+                vectorEdges.add(edge);
+        }
+        
+        return vectorEdges;
     }
 
     @Override
