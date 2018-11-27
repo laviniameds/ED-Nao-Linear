@@ -1,6 +1,9 @@
 
 import graph.Graph;
 import graph.Vertex;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import javax.swing.JFrame;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -32,5 +35,17 @@ public class Main {
         g.insertEdge(v4, v1);
         
         g.showMatrix();
+        
+        //show graph
+        
+        JFrame f = new JFrame("GraphPanel");
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setPreferredSize(new Dimension(800, 400));
+        f.pack();
+        f.setLocationRelativeTo(null);
+        f.setVisible(true);
+        
+        //Graphics draw = new Graphics();
+        //draw.drawLine(10, 20, 50, 30);
     }
 }

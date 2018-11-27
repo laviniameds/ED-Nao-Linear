@@ -127,12 +127,11 @@ public class Graph implements IGraph{
        return edge;       
     }
 
-    /*
-    TO DO
-    */  
     @Override
     public void removeArc(Edge edge) {
-        
+        int index1 = findIndex(edge.getVertexFrom().getKey());
+        int index2 = findIndex(edge.getVertexTo().getKey());
+        matrixAjd[index1][index2] = null;      
     }
     
     @Override
@@ -213,6 +212,17 @@ public class Graph implements IGraph{
         return (matrixAjd[index1][index2])!= null;       
     }
     
+    public Vector<Vertex> getNeighbors(Vertex vertex){
+        Vector<Vertex> v=new Vector();
+        int index = findIndex(vertex.getKey());
+        for (int i = 0; i < qtdVertices; i++) {
+            if(matrixAjd[index][i] != null){
+                v.add((Vertex)vertices.get(i));
+            }
+        }
+        return v;
+    } 
+    
     public void showVertices(){
         for(int f=0;f<vertices.size();f++)
         System.out.print(vertices.elementAt(f)+","); 
@@ -230,16 +240,5 @@ public class Graph implements IGraph{
             }
             System.out.println();
         }        
-    }
-    
-    public Vector<Vertex> neighbors(Vertex vertex){
-        Vector<Vertex> v=new Vector();
-        int index = findIndex(vertex.getKey());
-        for (int i = 0; i < qtdVertices; i++) {
-            if(matrixAjd[index][i] != null){
-                v.add((Vertex)vertices.get(i));
-            }
-        }
-        return v;
     }
 }
