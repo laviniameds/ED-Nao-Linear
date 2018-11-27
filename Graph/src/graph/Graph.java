@@ -220,9 +220,26 @@ public class Graph implements IGraph{
   
     public void showMatrix(){
         for(int f=0;f<qtdVertices;f++){
-            for(int g=0;g<qtdVertices;g++)
-               System.out.print(matrixAjd[f][g]+" ");
+            for(int g=0;g<qtdVertices;g++){
+                Edge edge = matrixAjd[f][g];
+                if(edge != null)
+                    System.out.print(matrixAjd[f][g].getVertexFrom().getKey()+
+                            "-"+matrixAjd[f][g].getVertexTo().getKey()+" ");
+                else
+                    System.out.print("null ");
+            }
             System.out.println();
         }        
+    }
+    
+    public Vector<Vertex> neighbors(Vertex vertex){
+        Vector<Vertex> v=new Vector();
+        int index = findIndex(vertex.getKey());
+        for (int i = 0; i < qtdVertices; i++) {
+            if(matrixAjd[index][i] != null){
+                v.add((Vertex)vertices.get(i));
+            }
+        }
+        return v;
     }
 }
