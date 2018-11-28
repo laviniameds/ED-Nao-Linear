@@ -41,6 +41,9 @@ public class AStar {
         
         //cria um contador para as chaves
         int countVertices = 1;
+        
+        //cria uma variavel para verificar se o algoritmo tem solucao
+        boolean hasSolution = false;
                       
         //cria o primeiro e o ultimo vertice (node) como nulo
         Vertex start = null;
@@ -142,8 +145,8 @@ public class AStar {
             Vector<Vertex> neighbors = graph.getNeighbors(current);
             //para cada vizinho
             for (Vertex neighbor : neighbors) {
-                //se o vizinho nao esta no closedSet
-                if(!closedSet.contains(neighbor)){
+                //se o vizinho nao esta no closedSet ou é um obstáculo (wall 'w')
+                if(!closedSet.contains(neighbor) && neighbor.getC() != 'w'){
                     //armazena o G temporario + 1
                     int tempG = current.getG()+1;
                             
@@ -152,6 +155,7 @@ public class AStar {
                         //se o G temporario atual é menor q o G do vizinho, atualiza o G
                         if(tempG < neighbor.getG()){
                             neighbor.setG(tempG);
+                            hasSolution = true;
                         }
                     }
                     //se não
@@ -159,23 +163,34 @@ public class AStar {
                         //atualiza o G e adiciona no openSet
                         neighbor.setG(tempG);
                         openSet.add(neighbor);
+                        hasSolution = true;
                     }
-                    //atualiza o H (calculando a heuristica) e o F (somando G e H)
-                    neighbor.setH(getHeuristic(neighbor, end));
-                    neighbor.setF(neighbor.getG()+neighbor.getH());
-                    path[neighbor.getKey()] = current.getKey();
-                }                              
-            }           
-        }
-        //não tem solução
-        
+                    
+                    if(hasSolution){
+                        //atualiza o H (calculando a heuristica) e o F (somando G e H)
+                        neighbor.setH(getHeuristic(0, neighbor, end));
+                        neighbor.setF(neighbor.getG()+neighbor.getH());
+                        path[neighbor.getKey()] = current.getKey(); 
+                    }
+                }
+            }
+        } 
+        //no solution
     }
     
-    public static int getHeuristic(Vertex v1, Vertex v2){
-        //distancia de euclides
-        int distance = (int)Math.hypot(v1.getX() - v2.getX(), v1.getY()-v2.getY());
+    //tipo '0' para euclides e '1' para manhattan
+    public static int getHeuristic(int kind, Vertex v1, Vertex v2){
         
-        return distance;
+        //distancia de euclides
+        if(kind == 0){
+            return (int)Math.hypot(v1.getX() - v2.getX(), v1.getY()-v2.getY());
+        }
+        //distancia de manhattan
+        if(kind == 1){
+            return Math.abs(v1.getX() - v2.getX()) + Math.abs(v1.getY() - v2.getY());
+        }
+        
+        return 1;
     }
     
 }
