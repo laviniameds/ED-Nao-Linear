@@ -41,9 +41,6 @@ public class AStar {
         
         //cria um contador para as chaves
         int countVertices = 1;
-        
-        //cria uma variavel para verificar se o algoritmo tem solucao
-        boolean hasSolution = false;
                       
         //cria o primeiro e o ultimo vertice (node) como nulo
         Vertex start = null;
@@ -70,32 +67,32 @@ public class AStar {
         //adiciona as arestas (vizinhos)
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-               if(i > height-1){
-                   graph.insertEdge(matrixVertices[i][j], matrixVertices[i+1][j]);
-               }
-               if(i > 0){
-                   graph.insertEdge(matrixVertices[i][j], matrixVertices[i-1][j]);
-               }
-               if(j < width-1){
-                   graph.insertEdge(matrixVertices[i][j], matrixVertices[i][j+1]);
-               }
-               if(j > 0){
-                   graph.insertEdge(matrixVertices[i][j], matrixVertices[i][j-1]);
-               }
+//               if(i > height-1){
+//                   graph.insertEdge(matrixVertices[i][j], matrixVertices[i+1][j]);
+//               }
+//               if(i > 0){
+//                   graph.insertEdge(matrixVertices[i][j], matrixVertices[i-1][j]);
+//               }
+//               if(j < width-1){
+//                   graph.insertEdge(matrixVertices[i][j], matrixVertices[i][j+1]);
+//               }
+//               if(j > 0){
+//                   graph.insertEdge(matrixVertices[i][j], matrixVertices[i][j-1]);
+//               }
                
 //               //Diagonal
-//               if(i > 0 && j > 0){
-//                   graph.insertEdge(matrixVertices[i][j], matrixVertices[i-1][j-1]);
-//               }
-//               if(i < height-1 && j > 0){
-//                   graph.insertEdge(matrixVertices[i][j], matrixVertices[i+1][j-1]);
-//               }
-//               if(i > 0 && j < width - 1){
-//                    graph.insertEdge(matrixVertices[i][j], matrixVertices[i-1][j+1]); 
-//               }
-//               if(i < height - 1 && j < width - 1){
-//                    graph.insertEdge(matrixVertices[i][j], matrixVertices[i+1][j+1]); 
-//               }
+               if(i > 0 && j > 0){
+                   graph.insertEdge(matrixVertices[i][j], matrixVertices[i-1][j-1]);
+               }
+               if(i < height-1 && j > 0){
+                   graph.insertEdge(matrixVertices[i][j], matrixVertices[i+1][j-1]);
+               }
+               if(i > 0 && j < width - 1){
+                    graph.insertEdge(matrixVertices[i][j], matrixVertices[i-1][j+1]); 
+               }
+               if(i < height - 1 && j < width - 1){
+                    graph.insertEdge(matrixVertices[i][j], matrixVertices[i+1][j+1]); 
+               }
             }
         }
         
@@ -163,13 +160,16 @@ public class AStar {
                 if(!closedSet.contains(neighbor) && neighbor.getC() != 'w'){
                     //armazena o G temporario + 1
                     int tempG = current.getG()+1;
+                    
+                    //cria uma variavel para identificar se existe um novo caminho
+                    boolean newPath = false;
                             
                     //se o vertice esta no openSet (esta sendo revisitado)
                     if(openSet.contains(neighbor)){
                         //se o G temporario atual é menor q o G do vizinho, atualiza o G
                         if(tempG < neighbor.getG()){
                             neighbor.setG(tempG);
-                            hasSolution = true;
+                            newPath = true;
                         }
                     }
                     //se não
@@ -177,12 +177,12 @@ public class AStar {
                         //atualiza o G e adiciona no openSet
                         neighbor.setG(tempG);
                         openSet.add(neighbor);
-                        hasSolution = true;
+                        newPath = true;
                     }
                     
-                    if(hasSolution){
+                    if(newPath){
                         //atualiza o H (calculando a heuristica) e o F (somando G e H)
-                        neighbor.setH(getHeuristic(1, neighbor, end));
+                        neighbor.setH(getHeuristic(0, neighbor, end));
                         neighbor.setF(neighbor.getG()+neighbor.getH());
                         path[neighbor.getKey()] = current.getKey(); 
                     }
