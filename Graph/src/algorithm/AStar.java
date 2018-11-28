@@ -82,6 +82,20 @@ public class AStar {
                if(j > 0){
                    graph.insertEdge(matrixVertices[i][j], matrixVertices[i][j-1]);
                }
+               
+//               //Diagonal
+//               if(i > 0 && j > 0){
+//                   graph.insertEdge(matrixVertices[i][j], matrixVertices[i-1][j-1]);
+//               }
+//               if(i < height-1 && j > 0){
+//                   graph.insertEdge(matrixVertices[i][j], matrixVertices[i+1][j-1]);
+//               }
+//               if(i > 0 && j < width - 1){
+//                    graph.insertEdge(matrixVertices[i][j], matrixVertices[i-1][j+1]); 
+//               }
+//               if(i < height - 1 && j < width - 1){
+//                    graph.insertEdge(matrixVertices[i][j], matrixVertices[i+1][j+1]); 
+//               }
             }
         }
         
@@ -168,7 +182,7 @@ public class AStar {
                     
                     if(hasSolution){
                         //atualiza o H (calculando a heuristica) e o F (somando G e H)
-                        neighbor.setH(getHeuristic(0, neighbor, end));
+                        neighbor.setH(getHeuristic(1, neighbor, end));
                         neighbor.setF(neighbor.getG()+neighbor.getH());
                         path[neighbor.getKey()] = current.getKey(); 
                     }
