@@ -41,14 +41,14 @@ public class Graph implements IGraph{
         vertices.add(vertex);
         Edge tempMatrixAdj[][] = new Edge[qtdVertices][qtdVertices];
         
-        for(int f = 0; f < qtdVertices - 1; f++)
+        for(int f = 0; f < qtdVertices - 1; f++){
             for(int g = 0; g < qtdVertices - 1; g++)
-                  tempMatrixAdj[f][g] = matrixAjd[f][g];              
+                  tempMatrixAdj[f][g] = matrixAjd[f][g];   
+        }
                    
         for(int g = 0;g <qtdVertices-1;g++)
             tempMatrixAdj[qtdVertices-1][g] = tempMatrixAdj[g][qtdVertices-1] = null;          
-        
-        
+                
         matrixAjd = tempMatrixAdj;        
     }
 
@@ -213,12 +213,11 @@ public class Graph implements IGraph{
     }
     
     public Vector<Vertex> getNeighbors(Vertex vertex){
-        Vector<Vertex> v=new Vector();
+        Vector<Vertex> v = new Vector();
         int index = findIndex(vertex.getKey());
         for (int i = 0; i < qtdVertices; i++) {
-            if(matrixAjd[index][i] != null){
-                v.add((Vertex)vertices.get(i));
-            }
+            if(matrixAjd[index][i] != null)
+                v.add((Vertex)vertices.get(i));          
         }
         return v;
     } 
