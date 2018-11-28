@@ -34,13 +34,13 @@ public class AStar {
         int width = grid[0].length();
         
         //cria uma matriz de vertices
-        Vertex[][] vertices = new Vertex[height][width];
+        Vertex[][] matrixVertices = new Vertex[height][width];
         
         //cria uma instancia da classe Graph
         Graph graph = new Graph();
         
         //cria um contador para as chaves
-        int countVertices = 0;
+        int countVertices = 1;
                       
         //cria o primeiro e o ultimo vertice (node) como nulo
         Vertex start = null;
@@ -50,11 +50,11 @@ public class AStar {
         for (int i = 0; i < height; i++) {
             for(int j = 0; j < width; j++){
                 //cria o vertice passando o char correspondente
-                Vertex vertex = new Vertex(++countVertices, grid[i].charAt(j), 0, 0, 0, 0, 0);
+                Vertex vertex = new Vertex(countVertices++, grid[i].charAt(j), 0, 0, 0, 0, 0);
                 
                 //insere o vertice no graph e na matriz de vertices
                 graph.insertVertex(vertex);
-                vertices[i][j] = vertex;
+                matrixVertices[i][j] = vertex;
                 
                 //grava o vertice inicial e o final
                 if(vertex.getC() == 's')
@@ -68,16 +68,16 @@ public class AStar {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                if(i > height-1){
-                   graph.insertEdge(vertices[i][j], vertices[i+1][j]);
+                   graph.insertEdge(matrixVertices[i][j], matrixVertices[i+1][j]);
                }
                if(i > 0){
-                   graph.insertEdge(vertices[i][j], vertices[i-1][j]);
+                   graph.insertEdge(matrixVertices[i][j], matrixVertices[i-1][j]);
                }
                if(j < width-1){
-                   graph.insertEdge(vertices[i][j], vertices[i][j+1]);
+                   graph.insertEdge(matrixVertices[i][j], matrixVertices[i][j+1]);
                }
                if(j > 0){
-                   graph.insertEdge(vertices[i][j], vertices[i][j-1]);
+                   graph.insertEdge(matrixVertices[i][j], matrixVertices[i][j-1]);
                }
             }
         }
@@ -89,7 +89,7 @@ public class AStar {
         openSet.add(start);
         
         //cria um vetor para armazenas as chaves do caminho final
-        int finalPath[] = new int[countVertices];
+        int path[] = new int[countVertices];
         
         //enquanto houver vertices a seres visitados
         while(!openSet.isEmpty()){
@@ -104,6 +104,31 @@ public class AStar {
             //se o atual for igual ao vertice final, o algoritmo acaba pois achou seu fim
             if(current.getC() == end.getC()){
                 System.err.println("Done!");
+                
+                //atualiza o path final                
+                //pega o vertice atual (ultimo do path)
+                int temp = current.getKey();
+                //pega os vertices adicionados ao grafo
+                Vector<Vertex> vertices = graph.vertices();
+                //enquanto temp não for o início
+                while(temp != start.getKey()){
+                    //pega o a key do vertice do path
+                    temp = path[temp];
+                    //muda o char do vertice anterior para identificá-lo como path
+                    vertices.get(temp-1).setC('#');
+                }
+                //coloca a # no final tbm
+                vertices.get(path[end.getKey()]).setC('#');
+                
+                //imprime o a matriz com o path final
+                for (int i = 0; i < height; i++) {
+                    for (int j = 0; j < width; j++) {
+                        Vertex v = matrixVertices[i][j];
+                        System.out.print(v.getC());
+                    }
+                    System.out.print('\n');
+                }
+
                 break;
             }
             
@@ -121,7 +146,7 @@ public class AStar {
                 if(!closedSet.contains(neighbor)){
                     //armazena o G temporario + 1
                     int tempG = current.getG()+1;
-                    
+                            
                     //se o vertice esta no openSet (esta sendo revisitado)
                     if(openSet.contains(neighbor)){
                         //se o G temporario atual é menor q o G do vizinho, atualiza o G
@@ -138,7 +163,7 @@ public class AStar {
                     //atualiza o H (calculando a heuristica) e o F (somando G e H)
                     neighbor.setH(getHeuristic(neighbor, end));
                     neighbor.setF(neighbor.getG()+neighbor.getH());
-                    finalPath[neighbor.getKey()] = current.getKey();
+                    path[neighbor.getKey()] = current.getKey();
                 }                              
             }           
         }
