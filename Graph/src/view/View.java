@@ -154,14 +154,14 @@ public class View extends JFrame{
             g.fillRect(vertex.getY()*size, vertex.getX()*size, size+1, size+1);
         }
         
-        for (Vertex vertex : closedSet) {
-            g.setColor(Color.RED);
-            g.fillRect(vertex.getY()*size, vertex.getX()*size, size+1, size+1);
-        } 
-        for (Vertex vertex : openSet) {
-            g.setColor(Color.GREEN);
-            g.fillRect(vertex.getY()*size, vertex.getX()*size, size+1, size+1);
-        } 
+//        for (Vertex vertex : closedSet) {
+//            g.setColor(Color.RED);
+//            g.fillRect(vertex.getY()*size, vertex.getX()*size, size+1, size+1);
+//        } 
+//        for (Vertex vertex : openSet) {
+//            g.setColor(Color.GREEN);
+//            g.fillRect(vertex.getY()*size, vertex.getX()*size, size+1, size+1);
+//        } 
 
         while(!openSet.isEmpty()){
             
