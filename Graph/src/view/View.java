@@ -24,6 +24,8 @@ public class View extends JFrame{
     private static int WIDTH = 640;
     private static int HEIGHT = 480;
     private static int size = 20;
+    private Vector<Vertex> vertices;
+    private Vector<Vertex> test = new Vector<>();
     
     @Override
     public void paint(Graphics g) {
@@ -164,26 +166,27 @@ public class View extends JFrame{
                 //pega o vertice atual (ultimo do path)
                 int temp = current.getKey();
                 //pega os vertices adicionados ao grafo
-                Vector<Vertex> vertices = graph.vertices();
+                vertices = graph.vertices();
                 //enquanto temp não for o início
                 while(temp != start.getKey()){
                     //pega o a key do vertice do path
                     temp = path[temp];
                     //muda o char do vertice anterior para identificá-lo como path
                     vertices.get(temp-1).setC('#');
+                    test.add(vertices.elementAt(temp-1));
                     g.setColor(Color.GREEN);
-                    g.fillRect(vertices.get(temp-1).getY()*size, vertices.get(temp-1).getX()*size, size+1, size+1);   
-                    
-                    try {
-                    Thread.sleep(25);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-                    } 
+                    //g.fillRect(vertices.get(temp-1).getY()*size, vertices.get(temp-1).getX()*size, size+1, size+1);   
+//                    
+//                    try {
+//                    Thread.sleep(25);
+//                    } catch (InterruptedException ex) {
+//                        Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+//                    } 
                 }
                 //coloca a # no final tbm
-                g.setColor(Color.GREEN);
                 vertices.get(path[end.getKey()]).setC('#');
-                g.fillRect(vertices.get(path[end.getKey()]).getY()*size, vertices.get(path[end.getKey()]).getX()*size, size+1, size+1);
+                g.setColor(Color.GREEN);
+                //g.fillRect(vertices.get(path[end.getKey()]).getY()*size, vertices.get(path[end.getKey()]).getX()*size, size+1, size+1);
                 
                 
                 //imprime o a matriz com o path final
@@ -194,8 +197,6 @@ public class View extends JFrame{
                     }
                     System.out.print('\n');
                 }
-
-                break;
             }
             
             //se ainda nao terminou
@@ -240,7 +241,16 @@ public class View extends JFrame{
                     } 
                 }
             }
-        } 
+        }
+        for(int i = test.size()-1; i > 0; i--){
+            g.fillRect(test.get(i).getY()*size, test.get(i).getX()*size, size+1, size+1);   
+
+            try {
+            Thread.sleep(80);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+            } 
+        }
     }
 
     public View(String title){
