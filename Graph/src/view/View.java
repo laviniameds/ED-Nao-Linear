@@ -5,23 +5,15 @@
  */
 package view;
 
-import static algorithm.AStar.getHeuristic;
-import draw.GraphPanel;
 import graph.Graph;
 import graph.Vertex;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
-import javax.swing.JScrollPane;
 
 /**
  *
@@ -35,7 +27,8 @@ public class View extends JFrame{
     
     @Override
     public void paint(Graphics g) {
-        //super.paint(g);
+        
+        super.paint(g);
         
         //modelo de grid onde o algoritmo vai rodar
         String model = "s00000000000000000000000w\n" +
@@ -153,15 +146,6 @@ public class View extends JFrame{
             
             g.fillRect(vertex.getY()*size, vertex.getX()*size, size+1, size+1);
         }
-        
-//        for (Vertex vertex : closedSet) {
-//            g.setColor(Color.RED);
-//            g.fillRect(vertex.getY()*size, vertex.getX()*size, size+1, size+1);
-//        } 
-//        for (Vertex vertex : openSet) {
-//            g.setColor(Color.GREEN);
-//            g.fillRect(vertex.getY()*size, vertex.getX()*size, size+1, size+1);
-//        } 
 
         while(!openSet.isEmpty()){
             
@@ -188,7 +172,13 @@ public class View extends JFrame{
                     //muda o char do vertice anterior para identificá-lo como path
                     vertices.get(temp-1).setC('#');
                     g.setColor(Color.GREEN);
-                    g.fillRect(vertices.get(temp-1).getY()*size, vertices.get(temp-1).getX()*size, size+1, size+1);
+                    g.fillRect(vertices.get(temp-1).getY()*size, vertices.get(temp-1).getX()*size, size+1, size+1);   
+                    
+                    try {
+                    Thread.sleep(25);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+                    } 
                 }
                 //coloca a # no final tbm
                 g.setColor(Color.GREEN);
@@ -200,7 +190,7 @@ public class View extends JFrame{
                 for (int i = 0; i < height; i++) {
                     for (int j = 0; j < width; j++) {
                         Vertex v = matrixVertices[i][j];
-                        System.out.print(v.getC());
+                        System.out.print(v.getC()); 
                     }
                     System.out.print('\n');
                 }
@@ -232,7 +222,7 @@ public class View extends JFrame{
                         if(tempG < neighbor.getG()){
                             neighbor.setG(tempG);
                             newPath = true;
-                        }
+                        }                       
                     }
                     //se não
                     else {
@@ -246,8 +236,8 @@ public class View extends JFrame{
                         //atualiza o H (calculando a heuristica) e o F (somando G e H)
                         neighbor.setH(getHeuristic(0, neighbor, end));
                         neighbor.setF(neighbor.getG()+neighbor.getH());
-                        path[neighbor.getKey()] = current.getKey();
-                    }
+                        path[neighbor.getKey()] = current.getKey(); 
+                    } 
                 }
             }
         } 
@@ -258,11 +248,13 @@ public class View extends JFrame{
         setSize(800, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
+        
+                
     }
 
     public static void main(String[] args) throws IOException {
-          
-        View view = new View("Graph");
+        
+        new View("Graph");
         
     }
     
