@@ -22,6 +22,40 @@ public class Graph implements IGraph{
         this.qtdVertices = 0;
         this.vertices = new Vector();
     }
+
+    //is eulerian
+    //eulerian path method
+    public bool isEulerian(){
+        /*grau=0; soma=0; matadj[][]; N=numero de linhas da matriz; f=0;//linha atual;
+        Enquanto(soma<=2)e(f<=N) {
+            grau=0;
+            para(g=0;g<N;g++){
+            grau+=matadj[f][g];
+            }
+            se grau mod 2 == 1 // ímpar
+            soma++
+            f++;
+        }
+        Se (soma>2) NÃO EXISTE CAMINHO
+        Senao EXISTE CAMINHO*/
+        grade = 0;
+        sum = 0;
+        f = 0;
+        while(sum <= 2 && f<= qtdVertices){
+           grade = 0;
+
+           for(int g=0; g < qtdVertices; g++)   
+            grade += matrixAjd[f][g]; 
+           
+           if((grade % 2) == 1)
+            sum++;
+           
+           f++;    
+        }
+        if(sum > 2)
+            return false;
+        return true; 
+    }
     
     public int findIndex(int key){
         Iterator I = vertices.iterator();
