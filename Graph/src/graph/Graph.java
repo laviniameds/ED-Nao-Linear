@@ -40,15 +40,15 @@ public class Graph implements IGraph{
     Senao EXISTE CAMINHO
 
     */
-    public bool isEulerian(){
-        grade = 0;
-        sum = 0;
-        f = 0;
+    public boolean isEulerian(){
+        int grade = 0;
+        int sum = 0;
+        int f = 0;
         while(sum <= 2 && f<= qtdVertices){
            grade = 0;
 
            for(int g=0; g < qtdVertices; g++)   
-            grade += matrixAjd[f][g]; 
+            grade += matrixAjd[f][g].getValue(); 
            
            if((grade % 2) == 1)
             sum++;
@@ -57,6 +57,7 @@ public class Graph implements IGraph{
         }
         if(sum > 2)
             return false;
+        
         return true; 
     }
 
