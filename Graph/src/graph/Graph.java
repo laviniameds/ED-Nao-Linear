@@ -23,21 +23,24 @@ public class Graph implements IGraph{
         this.vertices = new Vector();
     }
 
-    //is eulerian
-    //eulerian path method
-    public bool isEulerian(){
-        /*grau=0; soma=0; matadj[][]; N=numero de linhas da matriz; f=0;//linha atual;
-        Enquanto(soma<=2)e(f<=N) {
-            grau=0;
-            para(g=0;g<N;g++){
-            grau+=matadj[f][g];
-            }
-            se grau mod 2 == 1 // ímpar
-            soma++
-            f++;
+    /*
+    eulerian path method
+
+    grau=0; soma=0; matadj[][]; N=numero de linhas da matriz; f=0;//linha atual;
+    Enquanto(soma<=2)e(f<=N) {
+        grau=0;
+        para(g=0;g<N;g++){
+        grau+=matadj[f][g];
         }
-        Se (soma>2) NÃO EXISTE CAMINHO
-        Senao EXISTE CAMINHO*/
+        se grau mod 2 == 1 // ímpar
+        soma++
+        f++;
+    }
+    Se (soma>2) NÃO EXISTE CAMINHO
+    Senao EXISTE CAMINHO
+
+    */
+    public bool isEulerian(){
         grade = 0;
         sum = 0;
         f = 0;
@@ -56,6 +59,49 @@ public class Graph implements IGraph{
             return false;
         return true; 
     }
+
+    /*
+        DFS
+        
+        Para cada vértice v pertencente a V faça
+        v.marcar=0;//não visitado
+        d(v)=0; t=0;
+        Para cada vértice v pertencente a V faça
+        se(v.marcar==0)
+         DFS-VISITA(v);
+        DFS-VISITA(v){
+        v.marcar=-1;// visitado
+        d(v)=++t;
+        Para cada vértice w pertencente a ADJ[v] faça
+         se (w.marcar==0)
+         DFS-VISITA(w);
+        v.marcar=1; // marcado
+        s(v)=++t;
+        }  
+    
+    */
+
+
+    /*
+        BFS
+
+        Para cada vértice v pertencente a V –{S} faça
+        v.marcar=0;//não visitado
+        v.marcar=-1;// marcado
+        d(s)=0;
+        Q={}
+        Q.enqueue(S);
+        Enquanto(Q<>vazio){
+        v=Q.dequeue();
+        Para cada vértice w adjacente a ADJ[v] faça
+         se(w.marcar==0){
+         d(w)=d(v)+1;
+         w.marcar=-1;
+         Q.enqueue(w);
+         }
+        v.marcar=1; // marcado
+        }
+    */
     
     public int findIndex(int key){
         Iterator I = vertices.iterator();
